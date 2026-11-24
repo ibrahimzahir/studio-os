@@ -8,6 +8,8 @@ services:
   postgres:
     image: postgres:16.6-alpine
     restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-studio_os}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -16,6 +18,10 @@ services:
       - studio_os_pgdata:/var/lib/postgresql/data
     networks:
       - studio_internal
+    deploy:
+      resources:
+        limits:
+          memory: 1G
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-studio_os}"]
       interval: 10s
@@ -32,6 +38,10 @@ services:
       context: .
       target: migrator
     profiles: ["ops"]
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     environment:
       DATABASE_URL: ${MIGRATION_DATABASE_URL:?MIGRATION_DATABASE_URL is required}
     depends_on:
@@ -45,6 +55,13 @@ services:
       context: .
       target: api
     restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     environment:
       NODE_ENV: production
       API_HOST: 0.0.0.0
@@ -73,6 +90,14 @@ services:
       context: .
       target: web
     restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     environment:
       NODE_ENV: production
       API_INTERNAL_ORIGIN: http://api:4000
@@ -100,9 +125,14 @@ services:
         max-file: "3"
 
   cloudflared:
-    image: cloudflare/cloudflared:2025.4.0
+    image: cloudflare/cloudflared:2026.11.1
     restart: unless-stopped
     profiles: ["tunnel"]
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
     command: tunnel --no-autoupdate run
     environment:
       TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
@@ -111,6 +141,10 @@ services:
         condition: service_started
     networks:
       - studio_internal
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     logging:
       driver: json-file
       options:
