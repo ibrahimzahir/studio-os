@@ -51,7 +51,7 @@ jobs:
       - name: Smoke check loopback health
         run: |
           for i in $(seq 1 15); do
-            if curl -fsS http://127.0.0.1:3000/preview >/dev/null; then
+            if curl -fsS http://127.0.0.1:3200/preview >/dev/null; then
               echo "Web loopback smoke check passed."
               exit 0
             fi

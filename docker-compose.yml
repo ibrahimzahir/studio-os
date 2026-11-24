@@ -81,7 +81,7 @@ services:
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:?BETTER_AUTH_URL is required}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET is required}
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3200:3000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -98,6 +98,24 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  cloudflared:
+    image: cloudflare/cloudflared:2025.4.0
+    restart: unless-stopped
+    profiles: ["tunnel"]
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:?CLOUDFLARE_TUNNEL_TOKEN is required}
+    depends_on:
+      web:
+        condition: service_started
+    networks:
+      - studio_internal
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
 
 networks:
   studio_internal:
