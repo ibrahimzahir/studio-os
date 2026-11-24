@@ -11,6 +11,8 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
+ARG API_INTERNAL_ORIGIN=http://api:4000
+ENV API_INTERNAL_ORIGIN=${API_INTERNAL_ORIGIN}
 COPY . .
 RUN pnpm db:generate
 RUN pnpm build
