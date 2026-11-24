@@ -1,0 +1,61 @@
+name: Deploy (Gated)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_environment:
+        description: 'Target deployment environment (requires configured GitHub Environment + self-hosted runner)'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ inputs.target_environment }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to ${{ inputs.target_environment }}
+    runs-on: [self-hosted, linux, studio-os]
+    environment: ${{ inputs.target_environment }}
+    timeout-minutes: 20
+    steps:
+      - name: Checkout main (read-only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: main
+
+      - name: Verify required runtime env file on host
+        run: |
+          test -f "${STUDIO_OS_ENV_FILE:-/srv/studio-os/.env}" || {
+            echo "Missing host .env file; provision secrets on VPS before deploying."
+            exit 1
+          }
+
+      - name: Build & run gated database migrations
+        run: |
+          docker compose --env-file "${STUDIO_OS_ENV_FILE:-/srv/studio-os/.env}" build migrator api web
+          docker compose --env-file "${STUDIO_OS_ENV_FILE:-/srv/studio-os/.env}" up -d postgres
+          docker compose --env-file "${STUDIO_OS_ENV_FILE:-/srv/studio-os/.env}" run --rm migrator
+
+      - name: Roll out api & web containers
+        run: |
+          docker compose --env-file "${STUDIO_OS_ENV_FILE:-/srv/studio-os/.env}" up -d --remove-orphans api web
+
+      - name: Smoke check loopback health
+        run: |
+          for i in $(seq 1 15); do
+            if curl -fsS http://127.0.0.1:3000/preview >/dev/null; then
+              echo "Web loopback smoke check passed."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Web loopback smoke check failed."
+          exit 1
