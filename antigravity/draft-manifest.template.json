@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "schemaVersion": "1.0.0-draft",
+  "jobInput": {
+    "jobId": null,
+    "productSlug": "{{PRODUCT_SLUG}}",
+    "revision": "{{SEMVER_OR_DRAFT_REV}}",
+    "classification": "experimental_internal_draft",
+    "approvedNicheRef": "{{OWNER_APPROVED_NICHE_OR_BRIEF_PATH}}",
+    "demandValidated": false,
+    "briefPath": "{{BRIEF_PATH}}"
+  },
+  "executionPolicy": {
+    "runnerMode": "manual_agent_session",
+    "modelTierRouting": {
+      "routineMetadataTier": "{{CONFIGURED_LOW_COST_MODEL_ID}}",
+      "standardDraftingTier": "{{CONFIGURED_STANDARD_MODEL_ID}}",
+      "qualityEscalationTier": "{{CONFIGURED_REASONING_MODEL_ID}}"
+    },
+    "budgetCap": {
+      "maxRunCostUsd": 0.0,
+      "maxDailyCostUsd": 0.0,
+      "maxRetriesPerDefect": 3,
+      "enforceHardStopOnBudget": true
+    },
+    "automaticPublishing": false,
+    "humanReleaseApprovalRequired": true
+  },
+  "reviewState": {
+    "status": "draft",
+    "allowedStatuses": [
+      "draft",
+      "review",
+      "approved",
+      "scheduled",
+      "published",
+      "failed"
+    ],
+    "approvedBy": null,
+    "approvedAt": null,
+    "approvalContentHash": null,
+    "rejectionOrRevisionNote": null
+  },
+  "desiredSchedule": {
+    "channel": "pinterest_rss_only",
+    "preventDualRssAndApiPublish": true,
+    "dailySlotIndex": null,
+    "publishAtIso": null,
+    "destinationLandingUrl": "https://{{PUBLIC_DOMAIN_TBD}}/products/{{PRODUCT_SLUG}}",
+    "immutableAfterPublishFields": [
+      "id",
+      "link",
+      "publishAt"
+    ]
+  },
+  "outputs": {
+    "r2StorageScope": "private_draft",
+    "artifacts": [
+      {
+        "filename": "{{FILENAME}}",
+        "mediaType": "{{MIME_TYPE}}",
+        "byteSize": 0,
+        "sha256": "{{SHA256_HEX}}"
+      }
+    ],
+    "pinterestDrafts": [
+      {
+        "id": "{{UNIQUE_PIN_ID}}",
+        "filename": "{{PIN_IMAGE_PATH}}",
+        "mediaType": "image/png",
+        "width": 1000,
+        "height": 1500,
+        "byteSize": 0,
+        "sha256": "{{SHA256_HEX}}",
+        "title": "{{TITLE_MAX_100_CHARS}}",
+        "description": "{{DESCRIPTION_MAX_500_CHARS}}",
+        "altText": "{{DESCRIPTIVE_ALT_TEXT}}",
+        "destinationSlug": "/products/{{PRODUCT_SLUG}}",
+        "destinationUrlPlaceholder": "https://{{PUBLIC_DOMAIN_TBD}}/products/{{PRODUCT_SLUG}}",
+        "proposedBoard": "{{KEYWORD_BOARD_NAME}}"
+      }
+    ]
+  },
+  "qa": {
+    "reportPath": "{{QA_REPORT_PATH}}",
+    "overallStatus": "pending",
+    "checks": {
+      "spreadsheetEngineRecalculation": "not_run",
+      "formulaFixtures": "not_run",
+      "pdfPageRendering": "not_run",
+      "securityAndMacroScan": "not_run",
+      "pinterestUniquenessAndDimensions": "not_run"
+    },
+    "missingTools": [],
+    "unresolvedBlockers": []
+  },
+  "telemetry": {
+    "measuredCostUsd": null,
+    "inputTokens": null,
+    "outputTokens": null,
+    "agentActiveMinutes": null,
+    "ownerActiveMinutes": null,
+    "measurementNote": "Leave null when unmeasured; never fabricate savings or telemetry."
+  },
+  "errorState": {
+    "hasError": false,
+    "code": null,
+    "message": null,
+    "attemptCount": 0,
+    "lastFailedStep": null,
+    "nextAction": null
+  }
+}

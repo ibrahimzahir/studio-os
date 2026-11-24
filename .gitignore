@@ -8,3 +8,6 @@ production-jobs/
 next-env.d.ts
 
 *.tsbuildinfo
+src/generated/
+
+.local/

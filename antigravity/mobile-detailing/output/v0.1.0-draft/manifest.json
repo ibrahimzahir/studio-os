@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0.0-draft",
+  "productSlug": "mobile-detailing-planner",
+  "revision": "v0.1.0-draft",
+  "classification": "experimental_internal_draft",
+  "demandValidated": false,
+  "testPriceHypothesisUsd": 24.99,
+  "status": "draft_review",
+  "automaticPublishing": false,
+  "qaReportPath": "antigravity/mobile-detailing/output/v0.1.0-draft/QA-REPORT.md",
+  "artifacts": [
+    {
+      "filename": "job-costing-calculator.xlsx",
+      "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "byteSize": 13433,
+      "sha256": "2c144befc22a7a4dbb41867e385d68af9cb1c42df225aed37b313e0645d84d98"
+    },
+    {
+      "filename": "service-menu-us-letter.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 285997,
+      "sha256": "0b221f106975974242e9691a9c5bac9eac6990bb6d3d9cbcd1142e4d88418e93"
+    },
+    {
+      "filename": "service-menu-a4.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 285967,
+      "sha256": "a51f3fd2da8e24ba6e3f57dd7370a446c05ff7f675813d756afcdacf829a3fbe"
+    },
+    {
+      "filename": "vehicle-inspection-us-letter.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 243638,
+      "sha256": "20e570dc9ac2e349ca465b948f214c8ad73fe77d3aaf100c5d365fc6b34b9f83"
+    },
+    {
+      "filename": "vehicle-inspection-a4.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 243649,
+      "sha256": "82c691955fa52d4fb627d9989cd4f7673e73db77c6639a8594b3a0cc70085bc0"
+    },
+    {
+      "filename": "quick-start-guide-us-letter.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 437892,
+      "sha256": "b24a5f10f2dd208fe4f8214f6eb87428847161a2506da794864fdda816253bb2"
+    },
+    {
+      "filename": "quick-start-guide-a4.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 438060,
+      "sha256": "28e09df75996715c833dc8263720ac2582c5f2953455461d13cf650f8652c3aa"
+    }
+  ],
+  "pinterestDrafts": [
+    {
+      "id": "mdp-pin-01-job-costing",
+      "filename": "pinterest/pin-01-job-costing-calculator.png",
+      "title": "Mobile Detailing Job Costing Calculator \u2013 Price by Target Margin",
+      "description": "Calculate real mobile car detailing costs across labor hours, diluted chemicals, round-trip miles, and monthly overhead. Built-in target-margin formulas help prevent markup underpricing. Includes 3-tab Excel/Google Sheets workbook (no macros) and a quick-start guide. Built for independent mobile detailers. #mobiledetailing #detailingbusiness #jobcosting",
+      "altText": "Preview of the Mobile Detailing Job Costing Calculator and Margin vs. Markup guide showing a $100 job cost at 40% target margin yielding a $166.67 quoted price.",
+      "destinationSlug": "/products/mobile-detailing-planner",
+      "destinationUrlPlaceholder": "https://{{PUBLIC_DOMAIN_TBD}}/products/mobile-detailing-planner",
+      "proposedBoard": "Mobile Detailing Business Pricing & Calculators",
+      "status": "draft_review",
+      "width": 1000,
+      "height": 1500,
+      "byteSize": 228314,
+      "sha256": "fcd157ceaa1125c6977ba3c0ef8c5b7c5e27eb92a8eadd1a7d0370cc324a266d",
+      "mediaType": "image/png"
+    },
+    {
+      "id": "mdp-pin-02-service-menu",
+      "filename": "pinterest/pin-02-service-menu-template.png",
+      "title": "Mobile Car Detailing Service Menu Template \u2013 Printable PDF (US & A4)",
+      "description": "Present clear detailing packages by vehicle size (sedan, mid-size SUV, large SUV/truck) plus optional add-ons and upfront exclusions. Clean printable PDF with blank price slots so you enter your own calculator-derived rates. Prints cleanly in color or grayscale on US Letter and A4 paper. #cardetailing #servicemenu #smallbusinesstemplates",
+      "altText": "Preview of the printable Mobile Car Detailing Service Menu PDF showing Tier 1 Maintenance Wash, Tier 2 Interior Deep Clean, and Tier 3 Full Detail with blank vehicle-size price slots.",
+      "destinationSlug": "/products/mobile-detailing-planner",
+      "destinationUrlPlaceholder": "https://{{PUBLIC_DOMAIN_TBD}}/products/mobile-detailing-planner",
+      "proposedBoard": "Car Detailing Service Menus & Forms",
+      "status": "draft_review",
+      "width": 1000,
+      "height": 1500,
+      "byteSize": 235603,
+      "sha256": "eceab324fe5378a4f5aaef09957c46cf11d6ef65797b1c31a276823eff30aae1",
+      "mediaType": "image/png"
+    },
+    {
+      "id": "mdp-pin-03-vehicle-inspection",
+      "filename": "pinterest/pin-03-vehicle-inspection-form.png",
+      "title": "Pre-Service Vehicle Inspection Form \u2013 1-Page Detailing Checklist",
+      "description": "Walk around every vehicle with customers before detailing begins. This 1-page clipboard-ready PDF includes an original 5-view exterior diagram, defect code legend (scratch, dent, chip, curb rash), interior condition checklist, and customer pre-service acknowledgment block. Grayscale print safe in US Letter and A4. #mobiledetailing #vehicleinspection #autodetailing",
+      "altText": "Preview of the 1-page Pre-Service Vehicle Inspection Checklist PDF featuring top, side, front, and rear car outlines, defect code legend, interior checklist, and signature lines.",
+      "destinationSlug": "/products/mobile-detailing-planner",
+      "destinationUrlPlaceholder": "https://{{PUBLIC_DOMAIN_TBD}}/products/mobile-detailing-planner",
+      "proposedBoard": "Car Detailing Service Menus & Forms",
+      "status": "draft_review",
+      "width": 1000,
+      "height": 1500,
+      "byteSize": 233760,
+      "sha256": "f70fd69a8e0dc58e489e422db8e9b6251d0d99cac30a0944432bc995de68ff96",
+      "mediaType": "image/png"
+    },
+    {
+      "id": "mdp-pin-04-complete-toolkit",
+      "filename": "pinterest/pin-04-complete-detailing-toolkit.png",
+      "title": "Mobile Detailing Business Planner \u2013 Calculator, Menu & Inspection Kit",
+      "description": "Organize quoting and on-site walkarounds without monthly software subscriptions. Includes a deterministic Excel/Google Sheets job-costing calculator, printable tiered service menu, 1-page vehicle inspection form, and 15-minute quick-start guide in US Letter and A4 formats. Designed for solo and small-crew mobile detailers. #mobiledetailingbusiness #smallbusinessplanner #detailing",
+      "altText": "Collage preview of the 4-file Mobile Detailing Business Planner showing the printable Service Menu, 1-page Vehicle Inspection Form, and Quick-Start Guide.",
+      "destinationSlug": "/products/mobile-detailing-planner",
+      "destinationUrlPlaceholder": "https://{{PUBLIC_DOMAIN_TBD}}/products/mobile-detailing-planner",
+      "proposedBoard": "Small Service Business Operating Toolkits",
+      "status": "draft_review",
+      "width": 1000,
+      "height": 1500,
+      "byteSize": 283167,
+      "sha256": "480f44da2e0e1e2a774d03571369a3423db8bf293105c790320e742d67817ad3",
+      "mediaType": "image/png"
+    }
+  ],
+  "qaSummary": {
+    "pdfRenderingPassed": true,
+    "pdfSafetyAndAcroFormPassed": true,
+    "xlsxSecurityScanPassed": true,
+    "xlsxEngineRecalculationStatus": "unavailable_missing_tool",
+    "missingQaTools": [
+      "LibreOffice (soffice) or Microsoft Excel \u2014 required for real spreadsheet-engine formula recalculation and XLSX-to-PDF print check"
+    ],
+    "formulaFixturePythonDecimalPassed": true,
+    "pinterestDraftDimensionsPassed": true
+  },
+  "unresolvedBlockers": [
+    "Real spreadsheet-engine recalculation (LibreOffice/Excel not installed on host)",
+    "0/6 verified current Studio OS market-demand evidence metrics",
+    "Public domain not selected yet (Pinterest destination URLs use explicit {{PUBLIC_DOMAIN_TBD}} placeholder)",
+    "Owner release approval required before any public R2 promotion or publishing"
+  ]
+}

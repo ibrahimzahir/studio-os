@@ -7,4 +7,4 @@
 6. Antigravity file export and artifact ingestion/QA.
 7. Existing R2/VPS/Cloudflare integration, staging, encrypted restore drills and protected deployment.
 8. Storefront/payment eligibility, marketing and measured feedback loop.
-Do not deploy an unauthenticated dashboard with private data. GitHub Actions exists locally until committed/pushed; CD is not configured.
+Do not deploy an unauthenticated dashboard with private data. Initial foundation CI passed on GitHub; expanded auth/PostgreSQL CI is prepared locally. CD is not configured.

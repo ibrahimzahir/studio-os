@@ -1,5 +1,9 @@
 # Antigravity handoff prompt
 
+LATEST: Follow [ANTIGRAVITY-RELEASE-SPRINT.md](ANTIGRAVITY-RELEASE-SPRINT.md) next. It preserves completed preparation and authorizes the next internal draft/QA/marketing handoff queue. It takes precedence over the original preparation-only stop below; public release still needs owner review.
+
+Start with [ANTIGRAVITY-EXECUTION-FLOW.md](ANTIGRAVITY-EXECUTION-FLOW.md). It defines the current ordered tasks, automatic continuation rules and approval gates. The context below remains applicable.
+
 You are joining Studio OS — AI-Powered Digital Product Studio at /Users/ibrahimzahir/development/studio-os.
 
 First read the parent development/AGENTS.md, standards/ENGINEERING_PLAYBOOK.md, standards/UI_UX_PSYCHOLOGY.md, then project AGENTS.md, README.md, CLAUDE.md and every Markdown file under docs/. Read HANDOFF.md again immediately before changing anything because Codex is actively developing the engineering platform.

@@ -1,0 +1,2 @@
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+export default function Maintenance() { return <main className="mx-auto max-w-xl p-8"><Alert><AlertTitle>Studio maintenance</AlertTitle><AlertDescription>The studio is temporarily unavailable. Please try again later or contact your developer.</AlertDescription></Alert><a className="mt-5 inline-block underline" href="/sign-in">Return to sign in</a></main>; }

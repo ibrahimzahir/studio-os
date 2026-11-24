@@ -1,0 +1,5 @@
+import Link from 'next/link';
+import { SignInForm } from '@/features/auth/components/sign-in-form';
+import { ThemeToggle } from '@/components/shared/theme-toggle';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+export default function SignIn() { return <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-6 p-6"><div className="flex items-center justify-between"><Link href="/" className="text-xl font-semibold tracking-tight">studio os</Link><ThemeToggle /></div><Card><CardHeader><CardTitle>Welcome back</CardTitle><CardDescription>Sign in to your private studio. Access is provisioned by the developer.</CardDescription></CardHeader><CardContent><SignInForm /></CardContent><CardFooter><p className="text-xs text-muted-foreground">Invite-only access. Contact your developer if you need an account.</p></CardFooter></Card><Link className="text-center text-sm underline" href="/preview">View the sample dashboard</Link></main>; }

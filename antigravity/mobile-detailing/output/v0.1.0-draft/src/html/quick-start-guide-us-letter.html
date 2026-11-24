@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: 8.5in 11in; margin: 0; }
+  :root { --page-w: 8.5in; --page-h: 11in; }
+  
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #161B18; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  .page {
+    position: relative;
+    width: var(--page-w);
+    height: var(--page-h);
+    padding: var(--pad-t, 0.55in) 0.55in 0.50in 0.55in;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .header {
+    background: #1B4332;
+    color: #fff;
+    padding: 13px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .header h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+  .header p { margin: 3px 0 0 0; font-size: 10px; color: #DCE7E1; }
+  .badge {
+    background: #2D6A4F;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 5px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  h2 {
+    margin: 12px 0 7px 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #1B4332;
+    border-bottom: 1.5px solid #1B4332;
+    padding-bottom: 3px;
+  }
+  .muted { color: #4A5550; }
+  .box { border: 1px solid #8A9A92; background: #fff; margin-bottom: 10px; }
+  .subtle { background: #F4F7F5; }
+  .input-slot {
+    display: inline-block;
+    background: #EAF2EE;
+    border: 1px solid #6E8277;
+    height: 19px;
+    min-width: 72px;
+    vertical-align: middle;
+    padding: 2px 5px;
+    font-size: 9.5px;
+    color: #4A5550;
+  }
+  .footer {
+    position: absolute;
+    left: 0.55in;
+    right: 0.55in;
+    bottom: 0.34in;
+    border-top: 0.8px solid #C7D1CC;
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5px;
+    color: #4A5550;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 10px; font-variant-numeric: tabular-nums; }
+  th, td { border: 1px solid #C7D1CC; padding: 5px 7px; text-align: left; }
+  th { background: #F4F7F5; color: #1B4332; font-weight: 700; font-size: 9.5px; }
+  ul { margin: 5px 0; padding-left: 16px; }
+  li { margin-bottom: 4px; font-size: 10px; line-height: 1.38; }
+
+  
+      .step-card { background: #F4F7F5; border: 1px solid #2D6A4F; border-left: 4px solid #1B4332; padding: 10px 14px; margin-bottom: 12px; }
+      .step-card h3 { margin: 0 0 4px 0; font-family: Georgia, serif; font-size: 13px; color: #1B4332; }
+      .step-card p { margin: 0; font-size: 10.2px; line-height: 1.45; }
+      .formula-box { background: #F4F7F5; border: 1.2px solid #1B4332; padding: 11px 14px; margin-bottom: 14px; font-variant-numeric: tabular-nums; }
+      .formula-box .eq { font-weight: 700; color: #1B4332; font-size: 11px; margin-bottom: 5px; }
+      .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 12px 0 16px 0; }
+      .cmp-good { background: #EAF2EE; border: 1.4px solid #1B4332; padding: 12px 14px; }
+      .cmp-bad { background: #FFFFFF; border: 1.2px solid #8A9A92; padding: 12px 14px; }
+      .cmp-good h3 { margin: 0 0 8px 0; font-size: 11.5px; color: #1B4332; }
+      .cmp-bad h3 { margin: 0 0 8px 0; font-size: 11.5px; color: #9B1C1C; }
+      .kv { display: flex; justify-content: space-between; font-size: 10px; padding: 3.5px 0; border-bottom: 0.6px solid #C7D1CC; font-variant-numeric: tabular-nums; }
+      .kv:last-child { border-bottom: none; }
+      p.body-p { font-size: 10.2px; line-height: 1.48; margin: 4px 0 10px 0; }
+    
+</style>
+</head>
+<body>
+
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Mobile Detailing Planner — Quick-Start Guide</h1>
+          <p>Set up your real job costs, service menu, and walkaround checklist in ~15 minutes.</p>
+        </div>
+        <div class="badge">QUICK START</div>
+      </div>
+
+      <h2>1. What Is Included in Your Toolkit</h2>
+      <table>
+        <thead><tr><th style="width:32%;">File</th><th>Purpose &amp; Format</th></tr></thead>
+        <tbody>
+          <tr><td><strong>job-costing-calculator.xlsx</strong></td><td>Deterministic 3-tab Excel / LibreOffice / Google Sheets workbook (zero macros, zero external links).</td></tr>
+          <tr><td><strong>service-menu.pdf</strong></td><td>Clean 2-page tiered service menu (US Letter &amp; A4) with blank vehicle-size price slots and explicit exclusions.</td></tr>
+          <tr><td><strong>vehicle-inspection.pdf</strong></td><td>1-page clipboard-ready pre-service walkaround checklist with original 5-view car outline &amp; customer sign-off.</td></tr>
+          <tr><td><strong>quick-start-guide.pdf</strong></td><td>This 3-page setup guide, worked margin-vs-markup math example, and print tips.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>2. Your 15-Minute Setup Sequence (3 Steps)</h2>
+      <div class="step-card">
+        <h3>Step 1 — Enter Your Real Baseline Costs (7 minutes)</h3>
+        <p>Open <strong>job-costing-calculator.xlsx</strong>. Edit ONLY the shaded <strong>[INPUT]</strong> cells: your hourly labor rate, chemical/consumable cost per job (or use Tab 02 for bottle dilutions), round-trip miles &amp; per-mile vehicle rate, and fixed monthly overhead divided by expected monthly jobs.</p>
+      </div>
+      <div class="step-card">
+        <h3>Step 2 — Set Your Service Menu Prices (5 minutes)</h3>
+        <p>Use Tab 03 (<strong>03_Package_Matrix</strong>) to test target profit margins across your 3–4 service tiers and vehicle sizes (Sedan, Mid-Size SUV, Large SUV/Truck). Copy your resulting quoted prices onto <strong>service-menu.pdf</strong>.</p>
+      </div>
+      <div class="step-card">
+        <h3>Step 3 — Print Clipboard Inspection Sheets (3 minutes)</h3>
+        <p>Print 10–20 copies of <strong>vehicle-inspection.pdf</strong> (US Letter or A4, 100% / Actual Size, grayscale OK). Keep them on a clipboard in your vehicle and complete a 3-minute walkaround with every customer before touching the paint.</p>
+      </div>
+
+      <h2>3. Upfront Scope Boundaries (Feedforward)</h2>
+      <ul>
+        <li><strong>Deterministic math only:</strong> Every price is calculated strictly from numbers you enter — never guessed averages.</li>
+        <li><strong>No tax or legal advice:</strong> Excludes sales tax, income tax, and jurisdiction-specific liability waivers.</li>
+        <li><strong>No guaranteed income:</strong> This toolkit organizes pricing and on-site documentation; results depend on your local market and execution.</li>
+      </ul>
+
+      <div class="footer">
+        <span>Studio OS Mobile Detailing Planner (v0.1.0-draft) — Quick-Start Guide</span>
+        <span>Page 1 of 3</span>
+      </div>
+    </div>
+    
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Worked Pricing Example: Margin vs. Markup</h1>
+          <p>Why confusing margin and markup quietly underprices mobile detailing jobs.</p>
+        </div>
+        <div class="badge">PAGE 2 OF 3</div>
+      </div>
+
+      <h2>The Core Formula Used in job-costing-calculator.xlsx</h2>
+      <div class="formula-box">
+        <div class="eq">Total Cost = (Hours × Hourly Rate) + Materials + (Miles × Rate/Mile) + Allocated Overhead</div>
+        <div class="eq">Target Selling Price = Total Cost ÷ (1 − Target Margin)</div>
+        <div class="muted" style="font-size:9.5px;">Quoted Price rounds to the nearest cent ($0.01). Profit = Quoted Price − Total Cost.</div>
+      </div>
+
+      <h2>Canonical Worked Example: $100.00 Total Job Cost at 40% Target</h2>
+      <p class="body-p">Suppose a job's real cost is <strong>$100.00</strong> ($50.00 labor + $20.00 chemicals + $10.00 travel + $20.00 overhead) and you want a <strong>40% profit margin</strong>:</p>
+
+      <div class="compare">
+        <div class="cmp-good">
+          <h3>CORRECT: 40% Target Margin</h3>
+          <div class="kv"><span>Formula</span><strong>$100.00 ÷ (1 − 0.40)</strong></div>
+          <div class="kv"><span>Unrounded Target Price</span><span>$166.6666...</span></div>
+          <div class="kv"><span>Rounded Quoted Price</span><strong>$166.67</strong></div>
+          <div class="kv"><span>Dollar Profit</span><strong>$66.67</strong></div>
+          <div class="kv"><span>Actual Profit Margin</span><strong>40.00%</strong></div>
+          <div class="kv"><span>Equivalent Markup</span><span>66.67%</span></div>
+        </div>
+        <div class="cmp-bad">
+          <h3>COMMON MISTAKE: 40% Markup</h3>
+          <div class="kv"><span>Formula</span><strong>$100.00 × (1 + 0.40)</strong></div>
+          <div class="kv"><span>Quoted Price</span><strong>$140.00</strong></div>
+          <div class="kv"><span>Dollar Profit</span><strong>$40.00</strong></div>
+          <div class="kv"><span>Actual Profit Margin</span><strong style="color:#9B1C1C;">28.57%</strong></div>
+          <div class="kv"><span>Shortfall vs. 40% Margin</span><strong style="color:#9B1C1C;">−$26.67 / job</strong></div>
+          <div class="kv"><span>Impact</span><span>Underprices every quote</span></div>
+        </div>
+      </div>
+
+      <h2>Rounding &amp; Boundary-Case Behavior</h2>
+      <ul>
+        <li><strong>Intermediate precision:</strong> Labor and travel stay unrounded until Total Cost is summed, avoiding compounding penny drift on fractional hours or miles.</li>
+        <li><strong>Nearest-cent quoting:</strong> Recommended Quoted Price uses standard half-away-from-zero rounding to $0.01; Projected Profit uses that rounded quoted price.</li>
+        <li><strong>Zero-revenue / comped jobs:</strong> Entering $0.00 as an Actual Selling Price shows exact negative profit and <code>N/A (Zero Revenue)</code> for margin — never a <code>#DIV/0!</code> error.</li>
+        <li><strong>Invalid input protection:</strong> Negative numbers, non-numeric entries, or target margins of 100% or higher trigger an explicit <code>ERR:</code> message.</li>
+      </ul>
+
+      <div class="footer">
+        <span>Canonical math matches FORMULA-TEST-CASES.md (TC-01).</span>
+        <span>Page 2 of 3</span>
+      </div>
+    </div>
+    
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Job-Day Workflow, Printing &amp; Troubleshooting</h1>
+          <p>Practical habits for driveway walkarounds, grayscale printing, and spreadsheet use.</p>
+        </div>
+        <div class="badge">PAGE 3 OF 3</div>
+      </div>
+
+      <h2>1. Repeatable Job-Day Routine</h2>
+      <ul>
+        <li><strong>Before Driving:</strong> Confirm address, vehicle size tier, and water/power availability; keep blank <em>vehicle-inspection.pdf</em> sheets on a clipboard.</li>
+        <li><strong>On Arrival (3–5 minutes):</strong> Walk around the vehicle with the customer. Mark pre-existing scratches, dents, chips, curb rash, stains, or pet hair on the 5-view diagram; confirm final price and collect initials.</li>
+        <li><strong>After Heavy Jobs (2 minutes):</strong> Enter actual hours and extra chemical use into <em>01_Job_Calculator</em> with your quoted price in the Override cell to verify your real margin.</li>
+      </ul>
+
+      <h2>2. Printing &amp; Paper-Size Settings</h2>
+      <ul>
+        <li><strong>Match your paper size:</strong> Use <code>*-us-letter.pdf</code> for US Letter (8.5 × 11 in) or <code>*-a4.pdf</code> for A4 (210 × 297 mm).</li>
+        <li><strong>Scale to 100%:</strong> Choose <em>Actual Size</em> / <em>100%</em> in your print dialog so checkboxes and the 0.78 in clipboard top margin stay accurate.</li>
+        <li><strong>Grayscale-safe design:</strong> All forms print cleanly in black-and-white / grayscale with zero heavy dark ink backgrounds.</li>
+      </ul>
+
+      <h2>3. Spreadsheet Compatibility &amp; Troubleshooting</h2>
+      <ul>
+        <li><strong>Supported apps:</strong> Microsoft Excel, LibreOffice Calc, and Google Sheets (<em>File → Import → Upload .xlsx</em>).</li>
+        <li><strong>Entering percentages:</strong> Enter <code>40%</code> (or <code>0.40</code>) for Target Profit Margin. Entering <code>100%</code> or higher displays an <code>ERR:</code> banner because 100% margin is mathematically undefined for positive cost.</li>
+        <li><strong>Protected formula cells:</strong> Sheets use light, password-free protection to prevent accidental formula overwrites. You may unprotect any sheet in Excel/Calc to customize layout.</li>
+        <li><strong>Security hygiene:</strong> Zero VBA macros, zero external workbook links, and zero network calls.</li>
+      </ul>
+
+      <div class="footer">
+        <span>Studio OS Mobile Detailing Planner (v0.1.0-draft) — Internal experimental draft; not legal, tax, or financial advice.</span>
+        <span>Page 3 of 3</span>
+      </div>
+    </div>
+    
+</body>
+</html>

@@ -5,6 +5,24 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16.6-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: isolated-ci-only
+          POSTGRES_DB: studio_os_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://postgres:isolated-ci-only@127.0.0.1:5432/studio_os_test
+      DATABASE_URL: postgresql://studio_app:isolated-ci-app@127.0.0.1:5432/studio_os_test
+      AUTH_DATABASE_URL: postgresql://studio_auth:isolated-ci-auth@127.0.0.1:5432/studio_os_test
+      BETTER_AUTH_URL: http://127.0.0.1:3000
+      BETTER_AUTH_SECRET: isolated-ci-only-not-a-deployment-secret-123456
+      NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -12,5 +30,15 @@ jobs:
           node-version: '24.22.0'
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
-      - run: pnpm check
+      - run: pnpm db:generate
+      - run: pnpm db:migrate
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+      - name: Enable isolated test roles
+        run: |
+          psql "$TEST_DATABASE_URL" -v ON_ERROR_STOP=1 -c "ALTER ROLE studio_app LOGIN PASSWORD 'isolated-ci-app'; ALTER ROLE studio_auth LOGIN PASSWORD 'isolated-ci-auth';"
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
       - run: pnpm audit --prod --audit-level high

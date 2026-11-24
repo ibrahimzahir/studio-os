@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  :root { --page-w: 210mm; --page-h: 297mm; }
+  
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #161B18; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  .page {
+    position: relative;
+    width: var(--page-w);
+    height: var(--page-h);
+    padding: var(--pad-t, 0.55in) 0.55in 0.50in 0.55in;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .header {
+    background: #1B4332;
+    color: #fff;
+    padding: 13px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .header h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+  .header p { margin: 3px 0 0 0; font-size: 10px; color: #DCE7E1; }
+  .badge {
+    background: #2D6A4F;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 5px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  h2 {
+    margin: 12px 0 7px 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #1B4332;
+    border-bottom: 1.5px solid #1B4332;
+    padding-bottom: 3px;
+  }
+  .muted { color: #4A5550; }
+  .box { border: 1px solid #8A9A92; background: #fff; margin-bottom: 10px; }
+  .subtle { background: #F4F7F5; }
+  .input-slot {
+    display: inline-block;
+    background: #EAF2EE;
+    border: 1px solid #6E8277;
+    height: 19px;
+    min-width: 72px;
+    vertical-align: middle;
+    padding: 2px 5px;
+    font-size: 9.5px;
+    color: #4A5550;
+  }
+  .footer {
+    position: absolute;
+    left: 0.55in;
+    right: 0.55in;
+    bottom: 0.34in;
+    border-top: 0.8px solid #C7D1CC;
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5px;
+    color: #4A5550;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 10px; font-variant-numeric: tabular-nums; }
+  th, td { border: 1px solid #C7D1CC; padding: 5px 7px; text-align: left; }
+  th { background: #F4F7F5; color: #1B4332; font-weight: 700; font-size: 9.5px; }
+  ul { margin: 5px 0; padding-left: 16px; }
+  li { margin-bottom: 4px; font-size: 10px; line-height: 1.38; }
+
+  
+      .page { --pad-t: 0.78in; padding-bottom: 0.42in; }
+      .header { padding: 10px 14px; margin-bottom: 8px; }
+      .header h1 { font-size: 16.5px; }
+      .info-grid { display: grid; grid-template-columns: 2fr 1.2fr 1.1fr 0.8fr; gap: 6px 10px; padding: 7px 10px; background: #F4F7F5; border: 1px solid #C7D1CC; margin-bottom: 8px; }
+      .f label { display: block; font-size: 7.8px; font-weight: 700; color: #4A5550; margin-bottom: 2px; }
+      .f .box-in { height: 16px; background: #EAF2EE; border: 1px solid #6E8277; }
+      .split { display: grid; grid-template-columns: 1.45fr 1fr; gap: 12px; margin-top: 8px; }
+      .cb { display: inline-block; width: 13px; height: 13px; border: 1.3px solid #161B18; background: #fff; vertical-align: middle; }
+      .insp-tbl td, .insp-tbl th { padding: 3.5px 6px; font-size: 9.2px; }
+      .insp-tbl td.c { text-align: center; width: 42px; }
+      .chk-item { display: flex; align-items: center; gap: 7px; font-size: 9.2px; margin-bottom: 6px; }
+      .scope-f { margin-bottom: 6px; }
+      .scope-f label { display: block; font-size: 7.8px; font-weight: 700; color: #4A5550; margin-bottom: 2px; }
+      .scope-f .box-in { height: 17px; background: #EAF2EE; border: 1px solid #6E8277; }
+      .write-line { border-bottom: 0.9px solid #8A9A92; height: 22px; }
+      .ack { background: #F4F7F5; border: 1.2px solid #1B4332; padding: 8px 11px; margin-top: 10px; }
+      .ack p { margin: 2px 0 18px 0; font-size: 8.8px; color: #161B18; }
+      .sig-row { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
+      .sig-line { border-top: 1px solid #161B18; padding-top: 3px; font-size: 8px; color: #4A5550; }
+    
+</style>
+</head>
+<body>
+
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Pre-Service Vehicle Inspection &amp; Walkaround Form</h1>
+          <p>Complete together with customer before starting service. Clipboard &amp; grayscale print ready (0.78 in top clip margin).</p>
+        </div>
+        <div class="badge">1-PAGE CHECKLIST</div>
+      </div>
+
+      <div class="info-grid">
+        <div class="f"><label>CUSTOMER NAME</label><div class="box-in"></div></div>
+        <div class="f"><label>PHONE</label><div class="box-in"></div></div>
+        <div class="f"><label>DATE / TIME</label><div class="box-in"></div></div>
+        <div class="f"><label>JOB #</label><div class="box-in"></div></div>
+        <div class="f"><label>VEHICLE YEAR / MAKE / MODEL</label><div class="box-in"></div></div>
+        <div class="f"><label>COLOR</label><div class="box-in"></div></div>
+        <div class="f"><label>PLATE / LAST 6 VIN</label><div class="box-in"></div></div>
+        <div class="f"><label>ODOMETER</label><div class="box-in"></div></div>
+      </div>
+
+      
+<svg viewBox="0 0 680 182" width="100%" height="158" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+  <rect x="1" y="1" width="678" height="180" fill="#FFFFFF" stroke="#8A9A92" stroke-width="1"/>
+  <text x="10" y="16" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#1B4332">EXTERIOR CONDITION MAP — Mark defect codes directly on affected panels:</text>
+
+  <!-- 1. TOP / ROOF VIEW -->
+  <g transform="translate(18, 26)">
+    <rect x="6" y="4" width="76" height="128" rx="18" ry="18" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <rect x="16" y="34" width="56" height="64" rx="6" fill="none" stroke="#161B18" stroke-width="1"/>
+    <line x1="16" y1="54" x2="72" y2="54" stroke="#161B18" stroke-width="0.9"/>
+    <line x1="16" y1="80" x2="72" y2="80" stroke="#161B18" stroke-width="0.9"/>
+    <line x1="18" y1="34" x2="14" y2="10" stroke="#161B18" stroke-width="0.8"/>
+    <line x1="70" y1="34" x2="74" y2="10" stroke="#161B18" stroke-width="0.8"/>
+    <rect x="0" y="38" width="6" height="11" rx="2" fill="#FFFFFF" stroke="#161B18" stroke-width="1"/>
+    <rect x="82" y="38" width="6" height="11" rx="2" fill="#FFFFFF" stroke="#161B18" stroke-width="1"/>
+    <text x="44" y="146" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#4A5550">TOP / ROOF</text>
+  </g>
+
+  <!-- 2. LEFT / DRIVER SIDE -->
+  <g transform="translate(128, 26)">
+    <path d="M 8 44 L 8 28 L 44 23 L 70 6 L 138 6 L 166 22 L 190 26 L 190 44 Z" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <line x1="50" y1="23" x2="162" y2="23" stroke="#161B18" stroke-width="0.9"/>
+    <line x1="104" y1="6" x2="104" y2="44" stroke="#161B18" stroke-width="0.9"/>
+    <circle cx="42" cy="44" r="12" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <circle cx="42" cy="44" r="5.5" fill="none" stroke="#161B18" stroke-width="1"/>
+    <circle cx="152" cy="44" r="12" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <circle cx="152" cy="44" r="5.5" fill="none" stroke="#161B18" stroke-width="1"/>
+    <text x="99" y="68" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#4A5550">LEFT / DRIVER SIDE</text>
+  </g>
+
+  <!-- 3. RIGHT / PASSENGER SIDE -->
+  <g transform="translate(128, 102)">
+    <path d="M 6 44 L 6 26 L 30 22 L 58 6 L 126 6 L 152 23 L 188 28 L 188 44 Z" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <line x1="34" y1="23" x2="146" y2="23" stroke="#161B18" stroke-width="0.9"/>
+    <line x1="92" y1="6" x2="92" y2="44" stroke="#161B18" stroke-width="0.9"/>
+    <circle cx="44" cy="44" r="12" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <circle cx="44" cy="44" r="5.5" fill="none" stroke="#161B18" stroke-width="1"/>
+    <circle cx="154" cy="44" r="12" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <circle cx="154" cy="44" r="5.5" fill="none" stroke="#161B18" stroke-width="1"/>
+    <text x="99" y="68" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#4A5550">RIGHT / PASSENGER SIDE</text>
+  </g>
+
+  <!-- 4. FRONT VIEW -->
+  <g transform="translate(345, 26)">
+    <path d="M 10 22 L 20 6 L 82 6 L 92 22 Z" fill="#FFFFFF" stroke="#161B18" stroke-width="1.3"/>
+    <rect x="2" y="22" width="98" height="24" rx="5" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <rect x="8" y="27" width="18" height="8" fill="none" stroke="#161B18" stroke-width="1"/>
+    <rect x="76" y="27" width="18" height="8" fill="none" stroke="#161B18" stroke-width="1"/>
+    <rect x="31" y="29" width="40" height="11" fill="none" stroke="#161B18" stroke-width="1"/>
+    <rect x="8" y="46" width="15" height="8" fill="#161B18"/>
+    <rect x="79" y="46" width="15" height="8" fill="#161B18"/>
+    <text x="51" y="68" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#4A5550">FRONT</text>
+  </g>
+
+  <!-- 5. REAR VIEW -->
+  <g transform="translate(345, 102)">
+    <path d="M 10 22 L 20 6 L 82 6 L 92 22 Z" fill="#FFFFFF" stroke="#161B18" stroke-width="1.3"/>
+    <rect x="2" y="22" width="98" height="24" rx="5" fill="#FFFFFF" stroke="#161B18" stroke-width="1.4"/>
+    <rect x="8" y="26" width="20" height="8" fill="none" stroke="#161B18" stroke-width="1"/>
+    <rect x="74" y="26" width="20" height="8" fill="none" stroke="#161B18" stroke-width="1"/>
+    <rect x="35" y="30" width="32" height="10" fill="none" stroke="#161B18" stroke-width="1"/>
+    <rect x="8" y="46" width="15" height="8" fill="#161B18"/>
+    <rect x="79" y="46" width="15" height="8" fill="#161B18"/>
+    <text x="51" y="68" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="8.5" font-weight="700" fill="#4A5550">REAR</text>
+  </g>
+
+  <!-- DEFECT LEGEND -->
+  <g transform="translate(472, 24)">
+    <rect x="0" y="0" width="194" height="146" fill="#F4F7F5" stroke="#C7D1CC" stroke-width="1"/>
+    <text x="10" y="18" font-family="Helvetica, Arial, sans-serif" font-size="9.5" font-weight="700" fill="#1B4332">DEFECT CODE LEGEND</text>
+    <text x="10" y="37" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">S</tspan>   — Scratch / Scuff</text>
+    <text x="10" y="54" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">D</tspan>   — Dent / Ding</text>
+    <text x="10" y="71" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">C</tspan>   — Paint Chip</text>
+    <text x="10" y="88" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">R</tspan>   — Rust / Oxidation</text>
+    <text x="10" y="105" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">CR</tspan> — Curb Rash (Wheel)</text>
+    <text x="10" y="122" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">G</tspan>   — Glass Chip / Crack</text>
+    <text x="10" y="139" font-family="Helvetica, Arial, sans-serif" font-size="9.5" fill="#161B18"><tspan font-weight="700" fill="#1B4332">M</tspan>   — Missing Trim / Emblem</text>
+  </g>
+</svg>
+
+
+      <div class="split">
+        <div>
+          <h2 style="margin-top:4px;">Interior Condition Check</h2>
+          <table class="insp-tbl">
+            <thead><tr><th>Interior Zone</th><th class="c">Good</th><th class="c">Issue</th><th class="c">N/A</th></tr></thead>
+            <tbody><tr><td>Seats &amp; Upholstery</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Carpets &amp; Floor Mats</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Dashboard &amp; Console</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Door Panels &amp; Trim</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Headliner &amp; Visors</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Trunk / Cargo Area</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Pet Hair / Odor / Smoke</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr><tr><td>Dash Warning Lights</td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td><td class="c"><span class="cb"></span></td></tr></tbody>
+          </table>
+        </div>
+        <div>
+          <h2 style="margin-top:4px;">Access, Items &amp; Agreed Scope</h2>
+          <div class="chk-item"><span class="cb"></span><span>Valuables removed by customer</span></div>
+          <div class="chk-item"><span class="cb"></span><span>Child seat(s) present (noted)</span></div>
+          <div class="chk-item"><span class="cb"></span><span>Water &amp; power confirmed / self-contained</span></div>
+          <div class="chk-item"><span class="cb"></span><span>Pre-existing photos taken (optional)</span></div>
+          <div class="scope-f" style="margin-top:8px;"><label>AGREED SERVICE PACKAGE</label><div class="box-in"></div></div>
+          <div class="scope-f"><label>APPROVED ADD-ONS</label><div class="box-in"></div></div>
+          <div class="scope-f"><label>CONFIRMED QUOTE (USD)</label><div class="box-in" style="width:65%;"></div></div>
+        </div>
+      </div>
+
+      <h2 style="margin-top:10px;">Pre-Existing Defects &amp; Special Notes (Handwriting Space)</h2>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+      <div class="write-line"></div>
+
+      <div class="ack">
+        <div style="font-size:8.8px;font-weight:700;color:#1B4332;">CUSTOMER PRE-SERVICE ACKNOWLEDGMENT</div>
+        <p>I have reviewed the vehicle condition and pre-existing items noted above with the detailer and confirm the agreed service scope and price.</p>
+        <div class="sig-row">
+          <div class="sig-line">Customer Signature / Initials</div>
+          <div class="sig-line">Detailer Initials</div>
+          <div class="sig-line">Date / Time</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Operational inspection record only — not legal advice or a jurisdiction-specific liability waiver. (v0.1.0-draft)</span>
+        <span>Page 1 of 1</span>
+      </div>
+    </div>
+    
+</body>
+</html>

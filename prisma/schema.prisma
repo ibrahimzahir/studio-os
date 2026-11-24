@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+datasource db {
+  provider = "postgresql"
+}
+enum Role {
+  developer
+  staff
+  viewer
+}
+enum UserStatus {
+  active
+  suspended
+  blocked
+}
+model User {
+  id String @id
+  name String
+  email String @unique
+  emailVerified Boolean @default(false)
+  image String?
+  role Role @default(viewer)
+  status UserStatus @default(active)
+  studioId String
+  twoFactorEnabled Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  sessions Session[]
+  accounts Account[]
+  twoFactors TwoFactor[]
+}
+model Session {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token String @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  @@index([userId])
+}
+model Account {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accountId String
+  providerId String
+  password String?
+  accessToken String?
+  refreshToken String?
+  idToken String?
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+model Verification {
+  id String @id
+  identifier String
+  value String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  @@index([identifier])
+}
+model TwoFactor {
+  id String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  secret String
+  backupCodes String
+  verified Boolean @default(true)
+  failedVerificationCount Int @default(0)
+  lockedUntil DateTime?
+  @@index([userId])
+}
+model RateLimit {
+  id String @id
+  key String @unique
+  count Int
+  lastRequest BigInt
+}
+model Opportunity {
+  id String @id @default(uuid())
+  studioId String
+  title String @db.VarChar(160)
+  audience String @db.VarChar(500)
+  category String @db.VarChar(40)
+  status String @default("needs_research")
+  internalNotes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([studioId, createdAt, id])
+}
+model StudioSettings {
+  studioId String @id
+  maintenance Boolean @default(false)
+  maintenanceMessage String @default("The studio is undergoing maintenance. Please try again later.")
+  updatedAt DateTime @updatedAt
+}
+model AuditEvent {
+  id String @id @default(uuid())
+  studioId String
+  actorId String
+  action String
+  subjectId String
+  createdAt DateTime @default(now())
+  @@index([studioId, createdAt])
+}

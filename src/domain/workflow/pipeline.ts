@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { assessOpportunity } from './intelligence.js';
+import { assessOpportunity } from '../opportunities/scoring.js';
 
 const id = z.string().uuid();
 export const opportunitySchema = z.object({ id, title: z.string().trim().min(1).max(160), audience: z.string().trim().min(1).max(500), targetMarket: z.string().trim().min(1).max(100), testPriceCents: z.number().int().positive(), deliverables: z.array(z.string().regex(/^[a-z0-9][a-z0-9-]*\.(pdf|xlsx|html)$/)).min(1).refine(v => new Set(v).size === v.length) }).strict();

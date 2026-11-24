@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: 210mm 297mm; margin: 0; }
+  :root { --page-w: 210mm; --page-h: 297mm; }
+  
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #161B18; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  .page {
+    position: relative;
+    width: var(--page-w);
+    height: var(--page-h);
+    padding: var(--pad-t, 0.55in) 0.55in 0.50in 0.55in;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .header {
+    background: #1B4332;
+    color: #fff;
+    padding: 13px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .header h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 19px; font-weight: 700; letter-spacing: 0.01em; }
+  .header p { margin: 3px 0 0 0; font-size: 10px; color: #DCE7E1; }
+  .badge {
+    background: #2D6A4F;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 5px 9px;
+    border-radius: 3px;
+    white-space: nowrap;
+  }
+  h2 {
+    margin: 12px 0 7px 0;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #1B4332;
+    border-bottom: 1.5px solid #1B4332;
+    padding-bottom: 3px;
+  }
+  .muted { color: #4A5550; }
+  .box { border: 1px solid #8A9A92; background: #fff; margin-bottom: 10px; }
+  .subtle { background: #F4F7F5; }
+  .input-slot {
+    display: inline-block;
+    background: #EAF2EE;
+    border: 1px solid #6E8277;
+    height: 19px;
+    min-width: 72px;
+    vertical-align: middle;
+    padding: 2px 5px;
+    font-size: 9.5px;
+    color: #4A5550;
+  }
+  .footer {
+    position: absolute;
+    left: 0.55in;
+    right: 0.55in;
+    bottom: 0.34in;
+    border-top: 0.8px solid #C7D1CC;
+    padding-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 8.5px;
+    color: #4A5550;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 10px; font-variant-numeric: tabular-nums; }
+  th, td { border: 1px solid #C7D1CC; padding: 5px 7px; text-align: left; }
+  th { background: #F4F7F5; color: #1B4332; font-weight: 700; font-size: 9.5px; }
+  ul { margin: 5px 0; padding-left: 16px; }
+  li { margin-bottom: 4px; font-size: 10px; line-height: 1.38; }
+
+  
+      .biz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 14px; padding: 9px 12px; background: #F4F7F5; border: 1px solid #C7D1CC; margin-bottom: 10px; }
+      .biz-field label { display: block; font-size: 8.5px; font-weight: 700; color: #4A5550; margin-bottom: 2px; }
+      .biz-field .line { height: 17px; background: #EAF2EE; border: 1px solid #6E8277; }
+      .tier { border: 1px solid #8A9A92; margin-bottom: 11px; }
+      .tier-head { background: #F4F7F5; border-bottom: 1px solid #C7D1CC; padding: 6px 11px; display: flex; justify-content: space-between; align-items: center; }
+      .tier-head .tname { font-family: Georgia, serif; font-size: 13px; font-weight: 700; color: #1B4332; }
+      .tier-body { display: grid; grid-template-columns: 1.9fr 1fr; gap: 10px; padding: 8px 11px; }
+      .tier-desc { font-size: 9.5px; font-style: italic; color: #4A5550; margin: 0 0 5px 0; }
+      .price-col { border-left: 1px solid #C7D1CC; padding-left: 10px; }
+      .price-col h3 { margin: 0 0 6px 0; font-size: 8.5px; color: #1B4332; letter-spacing: 0.05em; }
+      .price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 9.5px; }
+      .notes-box { border: 1px solid #6E8277; background: #EAF2EE; height: 54px; margin-top: 4px; }
+    
+</style>
+</head>
+<body>
+
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Mobile Detailing Service Menu</h1>
+          <p>Clear tiered packages by vehicle size. Enter your own business details and calculator-derived prices.</p>
+        </div>
+        <div class="badge">PRINT &amp; DIGITAL MENU</div>
+      </div>
+
+      <div class="biz-grid">
+        <div class="biz-field"><label>BUSINESS NAME</label><div class="line"></div></div>
+        <div class="biz-field"><label>PHONE / SMS</label><div class="line"></div></div>
+        <div class="biz-field"><label>EMAIL / WEBSITE</label><div class="line"></div></div>
+        <div class="biz-field"><label>SERVICE AREA</label><div class="line"></div></div>
+      </div>
+
+      <h2>Core Detailing Packages (Transfer Rates from Job Costing Calculator)</h2>
+      
+        <div class="tier">
+          <div class="tier-head">
+            <span class="tname">Tier 1 — Maintenance Wash & Refresh</span>
+            <span style="font-size:9px;color:#4A5550;">Est. Time: <span class="input-slot" style="min-width:58px;height:16px;">___ hrs</span></span>
+          </div>
+          <div class="tier-body">
+            <div>
+              <p class="tier-desc">Ideal for well-maintained daily drivers needing regular upkeep.</p>
+              <ul><li>Two-bucket pH-neutral hand wash & gentle microfiber dry</li><li>Wheel faces, barrels, tires cleaned & satin dressing applied</li><li>Exterior glass cleaned streak-free & door jambs wiped</li><li>Quick interior vacuum (seats, carpets, mats) & dash dust-down</li></ul>
+            </div>
+            <div class="price-col">
+              <h3>YOUR PRICE (USD)</h3>
+              <div class="price-row"><span>Sedan / Coupe</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Mid-Size SUV</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Large SUV / Truck</span><span class="input-slot">$________</span></div>
+            </div>
+          </div>
+        </div>
+        
+      
+        <div class="tier">
+          <div class="tier-head">
+            <span class="tname">Tier 2 — Interior Deep Clean</span>
+            <span style="font-size:9px;color:#4A5550;">Est. Time: <span class="input-slot" style="min-width:58px;height:16px;">___ hrs</span></span>
+          </div>
+          <div class="tier-body">
+            <div>
+              <p class="tier-desc">Thorough cabin restoration for soiled upholstery, spills, and buildup.</p>
+              <ul><li>Full vacuum including crevices, under seats, and trunk/cargo</li><li>Deep scrub of dash, console, vents, cupholders, and door panels</li><li>Fabric shampoo / extraction OR leather clean & matte conditioning</li><li>Interior glass & mirrors cleaned; floor mats washed & dressed</li></ul>
+            </div>
+            <div class="price-col">
+              <h3>YOUR PRICE (USD)</h3>
+              <div class="price-row"><span>Sedan / Coupe</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Mid-Size SUV</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Large SUV / Truck</span><span class="input-slot">$________</span></div>
+            </div>
+          </div>
+        </div>
+        
+      
+        <div class="tier">
+          <div class="tier-head">
+            <span class="tname">Tier 3 — Full Interior + Exterior Detail</span>
+            <span style="font-size:9px;color:#4A5550;">Est. Time: <span class="input-slot" style="min-width:58px;height:16px;">___ hrs</span></span>
+          </div>
+          <div class="tier-body">
+            <div>
+              <p class="tier-desc">Complete inside-and-out restoration and durable paint protection.</p>
+              <ul><li>Everything included in Tier 1 Maintenance Wash + Tier 2 Interior</li><li>Iron fallout decontamination & clay-bar paint surface prep</li><li>3–6 month spray sealant / synthetic wax application</li><li>Exterior trim restoration & thorough final quality walkaround</li></ul>
+            </div>
+            <div class="price-col">
+              <h3>YOUR PRICE (USD)</h3>
+              <div class="price-row"><span>Sedan / Coupe</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Mid-Size SUV</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Large SUV / Truck</span><span class="input-slot">$________</span></div>
+            </div>
+          </div>
+        </div>
+        
+
+      <div class="footer">
+        <span>Prices are intentionally blank — calculate your own rates in job-costing-calculator.xlsx before sending.</span>
+        <span>Page 1 of 2</span>
+      </div>
+    </div>
+    
+    <div class="page">
+      <div class="header">
+        <div>
+          <h1>Add-On Services &amp; Service Expectations</h1>
+          <p>Explicit scope boundaries prevent misunderstandings on arrival.</p>
+        </div>
+        <div class="badge">PAGE 2 OF 2</div>
+      </div>
+
+      <h2>Optional Tier 4 — Paint Enhancement &amp; Protection</h2>
+      
+        <div class="tier">
+          <div class="tier-head">
+            <span class="tname">Tier 4 — Single-Stage Paint Enhancement</span>
+            <span style="font-size:9px;color:#4A5550;">Est. Time: <span class="input-slot" style="min-width:58px;height:16px;">___ hrs</span></span>
+          </div>
+          <div class="tier-body">
+            <div>
+              <p class="tier-desc">For dull paintwork needing higher gloss and swirl reduction.</p>
+              <ul><li>Full decon hand wash, iron remover, and clay-bar paint preparation</li><li>Single-stage machine polish to boost gloss and reduce light swirls</li><li>Panel wipe & durable polymer sealant or entry ceramic spray coating</li><li>Final paint inspection under dedicated lighting</li></ul>
+            </div>
+            <div class="price-col">
+              <h3>YOUR PRICE (USD)</h3>
+              <div class="price-row"><span>Sedan / Coupe</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Mid-Size SUV</span><span class="input-slot">$________</span></div>
+              <div class="price-row"><span>Large SUV / Truck</span><span class="input-slot">$________</span></div>
+            </div>
+          </div>
+        </div>
+        
+
+      <h2>Optional Add-On Services (Priced Separately)</h2>
+      <table>
+        <thead>
+          <tr><th style="width:27%;">Add-On Service</th><th>Scope Description</th><th style="width:18%;text-align:right;">Your Price (USD)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Pet Hair Removal</strong></td><td class="muted">Intensive rubber-brush &amp; vacuum extraction for embedded hair</td><td style="text-align:right;"><span class="input-slot">$________</span></td></tr>
+          <tr><td><strong>Heavy Stain / Odor Extraction</strong></td><td class="muted">Targeted enzyme treatment &amp; hot-water extraction per area</td><td style="text-align:right;"><span class="input-slot">$________</span></td></tr>
+          <tr><td><strong>Engine Bay Detail</strong></td><td class="muted">Gentle degrease, rinse protection, and non-greasy dressing</td><td style="text-align:right;"><span class="input-slot">$________</span></td></tr>
+          <tr><td><strong>Headlight Restoration</strong></td><td class="muted">Multi-stage wet sand, polish, and UV sealant (pair)</td><td style="text-align:right;"><span class="input-slot">$________</span></td></tr>
+          <tr><td><strong>Clay Bar &amp; Iron Decon</strong></td><td class="muted">Removes bonded brake dust and industrial fallout</td><td style="text-align:right;"><span class="input-slot">$________</span></td></tr>
+          <tr><td><strong>Extreme Soil Surcharge</strong></td><td class="muted">Quoted on-site for heavy mud, sand, smoke, or neglect</td><td style="text-align:right;"><span class="input-slot">$________</span></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Service Expectations &amp; Exclusions</h2>
+      <ul>
+        <li><strong>On-Site Inspection:</strong> Final quote is confirmed after a brief pre-service walkaround of vehicle condition.</li>
+        <li><strong>Personal Belongings:</strong> Please remove valuables, child seats, and loose items prior to appointment start.</li>
+        <li><strong>Access &amp; Safety:</strong> Safe off-street parking or permitted driveway required; confirm water/power access when booking.</li>
+        <li><strong>Exclusions:</strong> Biohazard cleanup, deep paint scratches through clear coat, and mechanical/body repairs are not included.</li>
+        <li><strong>Taxes &amp; Payment:</strong> Enter your own payment methods and applicable local tax policy below.</li>
+      </ul>
+
+      <div style="margin-top:8px;">
+        <div style="font-size:8.5px;font-weight:700;color:#4A5550;">YOUR BOOKING, CANCELLATION &amp; PAYMENT NOTES:</div>
+        <div class="notes-box"></div>
+      </div>
+
+      <div class="footer">
+        <span>Studio OS Mobile Detailing Planner (v0.1.0-draft) — Operational menu template; not legal or tax advice.</span>
+        <span>Page 2 of 2</span>
+      </div>
+    </div>
+    
+</body>
+</html>

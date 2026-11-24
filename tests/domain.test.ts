@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { assessOpportunity, weights } from '../src/intelligence.js';
-import { createProductionPackage, transition } from '../src/pipeline.js';
+import { assessOpportunity, weights } from '../src/domain/opportunities/scoring.js';
+import { createProductionPackage, transition } from '../src/domain/workflow/pipeline.js';
 const now = new Date('2026-11-24T12:00:00Z');
 const evidence = Object.keys(weights).map((metric, i) => ({ id: `00000000-0000-4000-8000-00000000000${i}`, metric, sourceUrl: 'https://example.com/research', platform: i % 2 ? 'marketplace' : 'search', observedAt: now.toISOString(), value: 90, confidence: 0.9, kind: 'observed', summary: 'Synthetic test fixture only' }));
 const opportunity = { id: '00000000-0000-4000-8000-000000000099', title: 'Mobile detailing planner', audience: 'Independent detailers', targetMarket: 'US', testPriceCents: 2499, deliverables: ['job-costing.xlsx', 'service-menu.pdf'] };

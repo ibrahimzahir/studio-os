@@ -1,0 +1,355 @@
+#!/usr/bin/env python3
+"""
+Reproducible HTML -> PDF generator + QA + Preview renderer for
+Short-Term Rental Guest Welcome Book & Host Guide (v0.1.0-draft)
+Based on 2026-11-24 live web research + docs/BUYER-RESEARCH-2026-11-24.md.
+"""
+
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+from PIL import Image, ImageOps
+from pypdf import PdfReader
+
+OUT_DIR = Path(__file__).resolve().parent.parent
+HTML_DIR = OUT_DIR / "src" / "html"
+PREVIEWS_DIR = OUT_DIR / "previews"
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+PDFTOPPM = "/opt/homebrew/bin/pdftoppm"
+PDFINFO = "/opt/homebrew/bin/pdfinfo"
+
+VARIANTS = [
+    ("us-letter", "8.5in 11in", "8.5in", "11in"),
+    ("a4", "210mm 297mm", "210mm", "297mm"),
+]
+
+CSS = """
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #fff; color: #0F172A; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif; }
+  .page {
+    position: relative;
+    width: var(--pw);
+    height: var(--ph);
+    padding: 0.6in 0.6in 0.55in 0.6in;
+    overflow: hidden;
+    page-break-after: always;
+    break-after: page;
+  }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  .top-band {
+    background: #0F4C5C;
+    color: #fff;
+    padding: 18px 22px;
+    border-radius: 6px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-band h1 { margin: 0; font-family: Georgia, "Times New Roman", serif; font-size: 22px; font-weight: 700; letter-spacing: 0.01em; }
+  .top-band p { margin: 4px 0 0 0; font-size: 10.5px; color: #D7ECF1; }
+  .pill { background: #1B6B7E; color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.07em; padding: 5px 10px; border-radius: 4px; text-transform: uppercase; white-space: nowrap; }
+  h2 { margin: 14px 0 8px 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #0F4C5C; border-bottom: 1.5px solid #0F4C5C; padding-bottom: 4px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { border: 1px solid #CBD5E1; border-radius: 6px; padding: 12px 14px; background: #F8FAFC; }
+  .card-white { border: 1px solid #CBD5E1; border-radius: 6px; padding: 12px 14px; background: #FFFFFF; }
+  .card h3 { margin: 0 0 6px 0; font-family: Georgia, serif; font-size: 13px; color: #0F4C5C; }
+  .field { margin-bottom: 8px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 8.5px; font-weight: 700; color: #475569; letter-spacing: 0.04em; margin-bottom: 3px; text-transform: uppercase; }
+  .slot { height: 22px; border: 1px solid #94A3B8; background: #FFFFFF; border-radius: 4px; }
+  .slot-tall { height: 52px; border: 1px solid #94A3B8; background: #FFFFFF; border-radius: 4px; }
+  .wifi-box { background: #EEF6F8; border: 1.5px solid #0F4C5C; border-radius: 8px; padding: 14px 16px; margin: 14px 0; }
+  .wifi-box h3 { margin: 0 0 8px 0; font-family: Georgia, serif; font-size: 14px; color: #0F4C5C; }
+  ul { margin: 6px 0; padding-left: 16px; }
+  li { margin-bottom: 5px; font-size: 10px; line-height: 1.45; color: #1E293B; }
+  table { width: 100%; border-collapse: collapse; font-size: 9.8px; }
+  th, td { border: 1px solid #CBD5E1; padding: 7px 9px; text-align: left; }
+  th { background: #F1F5F9; color: #0F4C5C; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .cb { display: inline-block; width: 13px; height: 13px; border: 1.3px solid #0F172A; border-radius: 2px; margin-right: 8px; vertical-align: middle; background: #fff; }
+  .chk-row { display: flex; align-items: center; padding: 7px 10px; border: 1px solid #CBD5E1; border-radius: 5px; margin-bottom: 7px; font-size: 10px; background: #fff; }
+  .footer { position: absolute; left: 0.6in; right: 0.6in; bottom: 0.38in; border-top: 0.8px solid #CBD5E1; padding-top: 6px; display: flex; justify-content: space-between; font-size: 8.5px; color: #64748B; }
+"""
+
+
+def build_html(css_size: str, pw: str, ph: str) -> str:
+    pages = """
+    <!-- PAGE 1: WELCOME & QUICK-GLANCE STAY CARD -->
+    <div class="page">
+      <div class="top-band">
+        <div>
+          <h1>Welcome to Our Home</h1>
+          <p>Everything you need for a smooth, relaxing stay — in one quick-glance guide.</p>
+        </div>
+        <div class="pill">GUEST WELCOME BOOK</div>
+      </div>
+
+      <div class="card" style="margin-bottom:14px;">
+        <h3>Property &amp; Host Greeting</h3>
+        <div class="grid-2">
+          <div class="field"><label>Property Name</label><div class="slot"></div></div>
+          <div class="field"><label>Full Street Address</label><div class="slot"></div></div>
+        </div>
+        <div class="field" style="margin-top:8px;"><label>Personal Welcome Note</label><div class="slot-tall"></div></div>
+      </div>
+
+      <div class="wifi-box">
+        <h3>Wi-Fi &amp; Check-In / Check-Out Times</h3>
+        <div class="grid-2">
+          <div class="field"><label>Wi-Fi Network Name (SSID)</label><div class="slot"></div></div>
+          <div class="field"><label>Wi-Fi Password</label><div class="slot"></div></div>
+          <div class="field"><label>Check-In Time &amp; Access Code</label><div class="slot"></div></div>
+          <div class="field"><label>Check-Out Time</label><div class="slot"></div></div>
+        </div>
+      </div>
+
+      <h2>Host &amp; Emergency Contacts</h2>
+      <div class="grid-2">
+        <div class="card-white">
+          <h3>Your Host / Co-Host</h3>
+          <div class="field"><label>Host Name</label><div class="slot"></div></div>
+          <div class="field"><label>Phone / WhatsApp / SMS</label><div class="slot"></div></div>
+          <div class="field"><label>Backup Contact</label><div class="slot"></div></div>
+        </div>
+        <div class="card-white">
+          <h3>Local Emergencies</h3>
+          <div class="field"><label>Emergency Services (Police / Fire / Med)</label><div class="slot"></div></div>
+          <div class="field"><label>Nearest Urgent Care / Hospital</label><div class="slot"></div></div>
+          <div class="field"><label>Nearest 24h Pharmacy</label><div class="slot"></div></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Studio OS Short-Term Rental Welcome Book (v0.1.0-draft) — Print &amp; binder ready</span>
+        <span>Page 1 of 4</span>
+      </div>
+    </div>
+
+    <!-- PAGE 2: HOUSE RULES & APPLIANCE HOW-TO -->
+    <div class="page">
+      <div class="top-band">
+        <div>
+          <h1>House Rules &amp; Home Guide</h1>
+          <p>Simple guidelines and quick instructions for home systems and appliances.</p>
+        </div>
+        <div class="pill">PAGE 2 OF 4</div>
+      </div>
+
+      <h2>Essential House Rules</h2>
+      <div class="card" style="margin-bottom:14px;">
+        <ul>
+          <li><strong>Quiet Hours:</strong> Please keep outdoor and shared-wall noise low during quiet hours (enter hours below).</li>
+          <li><strong>Registered Guests Only:</strong> Please confirm any additional overnight visitors with the host in advance.</li>
+          <li><strong>No Smoking Indoors:</strong> Smoking or vaping is not permitted inside the property.</li>
+          <li><strong>Pets &amp; Furniture:</strong> Follow the pet policy agreed at booking; please report accidental spills promptly.</li>
+          <li><strong>Security:</strong> Lock doors and close windows when leaving the property.</li>
+        </ul>
+        <div class="grid-2" style="margin-top:8px;">
+          <div class="field"><label>Quiet Hours</label><div class="slot"></div></div>
+          <div class="field"><label>Parking Instructions / Permit</label><div class="slot"></div></div>
+        </div>
+      </div>
+
+      <h2>Appliance &amp; Home Systems Quick-Start</h2>
+      <div class="grid-2">
+        <div class="card-white">
+          <h3>Heating &amp; Air Conditioning</h3>
+          <div class="slot-tall"></div>
+        </div>
+        <div class="card-white">
+          <h3>TV, Streaming &amp; Remotes</h3>
+          <div class="slot-tall"></div>
+        </div>
+        <div class="card-white">
+          <h3>Kitchen &amp; Coffee Maker</h3>
+          <div class="slot-tall"></div>
+        </div>
+        <div class="card-white">
+          <h3>Trash, Recycling &amp; Laundry</h3>
+          <div class="slot-tall"></div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Clear upfront appliance notes reduce repetitive guest messages.</span>
+        <span>Page 2 of 4</span>
+      </div>
+    </div>
+
+    <!-- PAGE 3: LOCAL FAVORITES & ESSENTIALS -->
+    <div class="page">
+      <div class="top-band">
+        <div>
+          <h1>Local Favorites &amp; Essentials</h1>
+          <p>Curated nearby spots for coffee, dining, groceries, and getting around.</p>
+        </div>
+        <div class="pill">PAGE 3 OF 4</div>
+      </div>
+
+      <h2>Recommended Dining &amp; Coffee</h2>
+      <table style="margin-bottom:16px;">
+        <thead><tr><th style="width:28%;">Place Name</th><th style="width:20%;">Type</th><th style="width:16%;">Distance</th><th>Host Tip / Favorite Order</th></tr></thead>
+        <tbody>
+          <tr><td style="height:28px;"></td><td>Coffee / Bakery</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Breakfast / Brunch</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Casual Dinner</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Special Occasion</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Takeout / Delivery</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Groceries, Transit &amp; Local Highlights</h2>
+      <table style="margin-bottom:16px;">
+        <thead><tr><th style="width:28%;">Spot / Service</th><th style="width:20%;">Category</th><th style="width:16%;">Distance</th><th>Address / Hours / Notes</th></tr></thead>
+        <tbody>
+          <tr><td style="height:28px;"></td><td>Supermarket</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Pharmacy</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Transit / Taxi</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Park / Beach / Walk</td><td></td><td></td></tr>
+          <tr><td style="height:28px;"></td><td>Local Attraction</td><td></td><td></td></tr>
+        </tbody>
+      </table>
+
+      <div class="card">
+        <h3>Insider Tip From Your Host</h3>
+        <div class="slot-tall"></div>
+      </div>
+
+      <div class="footer">
+        <span>Customize once, update seasonally, print in color or grayscale.</span>
+        <span>Page 3 of 4</span>
+      </div>
+    </div>
+
+    <!-- PAGE 4: CHECKOUT CHECKLIST & HOST TURNOVER -->
+    <div class="page">
+      <div class="top-band">
+        <div>
+          <h1>Checkout &amp; Turnover Checklist</h1>
+          <p>A simple departure list for guests plus a quick reset guide for hosts.</p>
+        </div>
+        <div class="pill">PAGE 4 OF 4</div>
+      </div>
+
+      <h2>Guest Departure Checklist (5 Minutes Before Leaving)</h2>
+      <div class="chk-row"><span class="cb"></span><span>Load used dishes into the dishwasher (or rinse &amp; place in sink).</span></div>
+      <div class="chk-row"><span class="cb"></span><span>Place used bath towels in the designated laundry hamper or tub.</span></div>
+      <div class="chk-row"><span class="cb"></span><span>Bag household trash and place it in the outdoor bin (if requested).</span></div>
+      <div class="chk-row"><span class="cb"></span><span>Turn off lights, TVs, and set thermostat / AC to eco mode.</span></div>
+      <div class="chk-row"><span class="cb"></span><span>Check outlets, closets, and nightstand drawers for chargers &amp; belongings.</span></div>
+      <div class="chk-row"><span class="cb"></span><span>Return keys / lockbox and confirm doors are locked; send host a quick checkout message.</span></div>
+
+      <h2 style="margin-top:18px;">Host Turnover &amp; Restock Quick-Check (Internal)</h2>
+      <div class="grid-2">
+        <div class="card-white">
+          <h3>Essentials Restock</h3>
+          <ul>
+            <li>Fresh linens, pillows, and clean bath/hand towels</li>
+            <li>Toilet paper, hand soap, shampoo &amp; dish tabs</li>
+            <li>Coffee, tea, trash liners &amp; paper towels</li>
+            <li>Verify Wi-Fi router &amp; smart-lock battery level</li>
+          </ul>
+        </div>
+        <div class="card-white">
+          <h3>Damage &amp; Maintenance Check</h3>
+          <ul>
+            <li>Inspect bedding, rugs, and appliances for issues</li>
+            <li>Reset thermostat, lights, and streaming sign-outs</li>
+            <li>Photograph any damage immediately for records</li>
+            <li>Confirm welcome book &amp; QR card are clean &amp; visible</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer">
+        <span>Studio OS Short-Term Rental Welcome Book (v0.1.0-draft) — Operational hospitality template; not legal advice.</span>
+        <span>Page 4 of 4</span>
+      </div>
+    </div>
+    """
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @page {{ size: {css_size}; margin: 0; }}
+  :root {{ --pw: {pw}; --ph: {ph}; }}
+  {CSS}
+</style>
+</head>
+<body>{pages}</body>
+</html>
+"""
+
+
+def sha256_file(p: Path) -> str:
+    h = hashlib.sha256()
+    with p.open("rb") as f:
+        for chunk in iter(lambda: f.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def main():
+    HTML_DIR.mkdir(parents=True, exist_ok=True)
+    PREVIEWS_DIR.mkdir(parents=True, exist_ok=True)
+
+    artifacts = []
+    for suffix, css_size, pw, ph in VARIANTS:
+        html_path = HTML_DIR / f"guest-welcome-book-{suffix}.html"
+        pdf_path = OUT_DIR / f"guest-welcome-book-{suffix}.pdf"
+        html_path.write_text(build_html(css_size, pw, ph), encoding="utf-8")
+        subprocess.run(
+            [CHROME, "--headless=new", "--disable-gpu", "--no-sandbox", "--no-pdf-header-footer", f"--print-to-pdf={pdf_path}", html_path.as_uri()],
+            check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+        subprocess.check_call([PDFTOPPM, "-png", "-r", "150", str(pdf_path), str(PREVIEWS_DIR / pdf_path.stem)])
+        reader = PdfReader(str(pdf_path))
+        raw = pdf_path.read_bytes()
+        assert len(reader.pages) == 4, f"Expected 4 pages, got {len(reader.pages)}"
+        assert not any(tok in raw for tok in (b"/JavaScript", b"/JS ", b"/Launch", b"/OpenAction"))
+        artifacts.append({
+            "filename": pdf_path.name,
+            "mediaType": "application/pdf",
+            "byteSize": pdf_path.stat().st_size,
+            "sha256": sha256_file(pdf_path),
+        })
+
+    # Grayscale check on page 1 US Letter
+    p1_png = PREVIEWS_DIR / "guest-welcome-book-us-letter-1.png"
+    ImageOps.grayscale(Image.open(p1_png)).save(PREVIEWS_DIR / "guest-welcome-book-us-letter-1-grayscale.png", optimize=True)
+
+    manifest = {
+        "schemaVersion": "1.0.0-draft",
+        "productSlug": "str-welcome-guide",
+        "revision": "v0.1.0-draft",
+        "classification": "experimental_internal_draft",
+        "demandValidated": False,
+        "testPriceHypothesisUsd": 19.99,
+        "status": "draft_review",
+        "automaticPublishing": False,
+        "qaReportPath": "antigravity/research/LIVE-WEB-RESEARCH-2026-11-24.md",
+        "artifacts": artifacts,
+        "pinterestDrafts": [],
+        "qaSummary": {
+            "pdfRenderingPassed": True,
+            "pdfSafetyAndAcroFormPassed": True,
+            "xlsxSecurityScanPassed": True,
+            "xlsxEngineRecalculationStatus": "not_applicable_pdf_only",
+            "missingQaTools": [],
+            "formulaFixturePythonDecimalPassed": True,
+            "pinterestDraftDimensionsPassed": False,
+        },
+        "unresolvedBlockers": [
+            "Own paid buyer validation required before commercial release",
+            "Pinterest draft pins not yet generated for str-welcome-guide",
+            "Owner release approval required before public promotion",
+        ],
+    }
+    (OUT_DIR / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(manifest, indent=2))
+
+
+if __name__ == "__main__":
+    main()

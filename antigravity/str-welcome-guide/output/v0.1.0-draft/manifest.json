@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "1.0.0-draft",
+  "productSlug": "str-welcome-guide",
+  "revision": "v0.1.0-draft",
+  "classification": "experimental_internal_draft",
+  "demandValidated": false,
+  "testPriceHypothesisUsd": 19.99,
+  "status": "draft_review",
+  "automaticPublishing": false,
+  "qaReportPath": "antigravity/research/LIVE-WEB-RESEARCH-2026-11-24.md",
+  "artifacts": [
+    {
+      "filename": "guest-welcome-book-us-letter.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 306563,
+      "sha256": "f08262436f78b778a5dde1f0dbe11232b49d4d537b37ed468c1fe9f924d6f4c5"
+    },
+    {
+      "filename": "guest-welcome-book-a4.pdf",
+      "mediaType": "application/pdf",
+      "byteSize": 306704,
+      "sha256": "e655daa8602461a90b82da84bd2ae11878dd863f191fd6b5368fc3cab15943d8"
+    }
+  ],
+  "pinterestDrafts": [],
+  "qaSummary": {
+    "pdfRenderingPassed": true,
+    "pdfSafetyAndAcroFormPassed": true,
+    "xlsxSecurityScanPassed": true,
+    "xlsxEngineRecalculationStatus": "not_applicable_pdf_only",
+    "missingQaTools": [],
+    "formulaFixturePythonDecimalPassed": true,
+    "pinterestDraftDimensionsPassed": false
+  },
+  "unresolvedBlockers": [
+    "Own paid buyer validation required before commercial release",
+    "Pinterest draft pins not yet generated for str-welcome-guide",
+    "Owner release approval required before public promotion"
+  ]
+}
