@@ -1,0 +1,30 @@
+{
+  "name": "studio-os",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=24.22.0 <25"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "next build",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "dev": "next dev --hostname 127.0.0.1"
+  },
+  "dependencies": {
+    "zod": "4.6.7",
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "vitest": "5.1.1",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/node": "24.10.1"
+  }
+}

@@ -1,0 +1,4 @@
+# Security and QA
+OWASP ASVS L1 baseline for the private prototype. Zod validation at boundaries, no secrets in code/logs, HTTPS/security headers before hosting, vetted auth and server-side authorization before any private data or mutations. Never fetch research URLs directly without SSRF protection.
+Current tests cover weighted scores, missing/stale/future/demo evidence, low confidence, single-platform evidence, duplicate IDs, invalid values/URLs, unsafe output paths, expired/mismatched approvals, deterministic job IDs and approval transitions.
+Required before public use: Better Auth, scoped DAL, content-bound durable approvals, secret scanning pre-commit/CI, security headers/CSP, dependency audits, private R2, tested encrypted backup restore and operational monitoring. No production claims until verified.

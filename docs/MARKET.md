@@ -1,0 +1,5 @@
+# Market intelligence
+Initial hypotheses: mobile detailing, residential cleaning, home bakery and guesthouse operations. Historical scores and prices are hypotheses, not verified current demand. Use authorized APIs and permitted research only.
+Weights: search growth 25%, marketplace demand 20%, social velocity 20%, purchase intent 15%, cross-platform momentum 10%, competitive opportunity 10%.
+Current implementation averages observations per metric, applies weights, and separately computes confidence. Production review requires all metrics, at least two declared platforms, confidence >=0.7 and score >=80. Freshness window: 30 days. These are initial engineering policy choices requiring calibration, not probability estimates. Platform names are caller-declared; verified source adapters and domain deduplication remain necessary.
+No live trend/virality classifier exists yet. Add time-series baselines and compare cross-source velocity before labeling a niche trending or viral. Engagement never establishes purchase intent by itself.
