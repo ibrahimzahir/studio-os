@@ -31,7 +31,7 @@ COPY --from=build --chown=node:node /app/tsconfig.json ./tsconfig.json
 COPY --from=build --chown=node:node /app/src ./src
 USER node
 EXPOSE 4000
-CMD ["./node_modules/.bin/tsx", "src/server/api/server.ts"]
+CMD ["node", "--import", "tsx", "src/server/start.ts"]
 
 # Stage 3: Next.js Web UI server (loopback port 3000 behind Cloudflare Tunnel)
 FROM base AS web
