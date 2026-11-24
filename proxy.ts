@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { contentSecurityPolicy } from './src/server/security/headers';
 export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  const policy = contentSecurityPolicy(nonce, process.env.NODE_ENV !== 'production');
+  const policy = contentSecurityPolicy(nonce, process.env.NODE_ENV !== 'production', [process.env.R2_PUBLIC_BASE_URL]);
   const headers = new Headers(request.headers); headers.set('x-nonce', nonce); headers.set('Content-Security-Policy', policy);
   const response = NextResponse.next({ request: { headers } });
   response.headers.set('Content-Security-Policy', policy);

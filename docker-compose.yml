@@ -101,6 +101,9 @@ services:
     environment:
       NODE_ENV: production
       API_INTERNAL_ORIGIN: http://api:4000
+      PUBLIC_SITE_ORIGIN: ${PUBLIC_SITE_ORIGIN:-https://studio.ibrahimzahir.com}
+      R2_PUBLIC_BASE_URL: ${R2_PUBLIC_BASE_URL:-https://assets.studio.ibrahimzahir.com}
+      PINTEREST_DOMAIN_VERIFY: ${PINTEREST_DOMAIN_VERIFY:-}
       DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
       AUTH_DATABASE_URL: ${AUTH_DATABASE_URL:?AUTH_DATABASE_URL is required}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL:?BETTER_AUTH_URL is required}

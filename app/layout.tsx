@@ -11,10 +11,13 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
+const pinterestVerify = process.env.PINTEREST_DOMAIN_VERIFY?.trim();
+
 export const metadata: Metadata = {
   title: 'Studio OS',
   description: 'Digital product intelligence and operations',
   robots: { index: false, follow: false },
+  ...(pinterestVerify ? { other: { 'p:domain_verify': pinterestVerify } } : {}),
 };
 
 export default async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
