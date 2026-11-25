@@ -14,6 +14,7 @@
  *   - Must be exact 1000x1500 (2:3 vertical Pinterest standard)
  */
 
+import 'dotenv/config';
 import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -143,7 +144,7 @@ async function main() {
   }
 
   if (dryRun) {
-    const publicBase = (process.env.R2_PUBLIC_BASE_URL || 'https://assets.studio.ibrahimzahir.com').replace(/\/+$/, '');
+    const publicBase = (process.env.R2_PUBLIC_BASE_URL || 'https://studio-assets.ibrahimzahir.com').replace(/\/+$/, '');
     for (const f of files) {
       console.log(`[dry-run OK] ${f.filename} (${f.width}x${f.height}, ${f.buf.length}B, ${f.contentType}) -> ${publicBase}/${f.key}`);
     }
@@ -155,14 +156,20 @@ async function main() {
   const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
   const bucket = process.env.R2_BUCKET || 'studio-os-assets';
   if (!accountId || !accessKeyId || !secretAccessKey) {
-    console.error('Missing R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, or R2_SECRET_ACCESS_KEY.');
+    console.error('Missing R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, or R2_SECRET_ACCESS_KEY (set in .env or environment).');
     process.exit(1);
   }
 
-  const publicBase = (process.env.R2_PUBLIC_BASE_URL || 'https://assets.studio.ibrahimzahir.com').replace(/\/+$/, '');
+  const publicBase = (process.env.R2_PUBLIC_BASE_URL || 'https://studio-assets.ibrahimzahir.com').replace(/\/+$/, '');
   for (const f of files) {
     await uploadToR2({ accountId, accessKeyId, secretAccessKey, bucket, key: f.key, body: f.buf, contentType: f.contentType });
-    console.log(`[uploaded] ${f.key} (${f.width}x${f.height}, ${f.buf.length}B) -> ${publicBase}/${f.key}`);
+    const publicUrl = `${publicBase}/${f.key}`;
+    const check = await fetch(publicUrl, { method: 'HEAD' });
+    const liveType = check.headers.get('content-type') || 'unknown';
+    console.log(`[uploaded & verified ${check.status} ${liveType}] ${publicUrl} (${f.width}x${f.height}, ${f.buf.length}B)`);
+    if (!check.ok) {
+      throw new Error(`Post-upload verification failed for ${publicUrl}: HTTP ${check.status}`);
+    }
   }
 }
 

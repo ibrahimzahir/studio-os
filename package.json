@@ -16,6 +16,7 @@
     "db:generate": "prisma generate",
     "db:validate": "prisma validate",
     "db:migrate": "prisma migrate deploy",
+    "r2:upload": "node scripts/r2-upload.mjs",
     "lint": "eslint app src tests scripts proxy.ts next.config.ts"
   },
   "dependencies": {

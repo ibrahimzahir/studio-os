@@ -21,7 +21,7 @@ export interface PublicProduct {
 }
 
 export const DEFAULT_PUBLIC_SITE_ORIGIN = 'https://studio.ibrahimzahir.com';
-export const DEFAULT_R2_PUBLIC_BASE_URL = 'https://assets.studio.ibrahimzahir.com';
+export const DEFAULT_R2_PUBLIC_BASE_URL = 'https://studio-assets.ibrahimzahir.com';
 
 export function getPublicSiteOrigin(): string {
   return (process.env.PUBLIC_SITE_ORIGIN || process.env.BETTER_AUTH_URL || DEFAULT_PUBLIC_SITE_ORIGIN).replace(/\/+$/, '');

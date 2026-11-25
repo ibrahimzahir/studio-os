@@ -14,7 +14,7 @@ import {
 import { contentSecurityPolicy } from '../src/server/security/headers';
 
 const SITE = 'https://studio.ibrahimzahir.com';
-const R2 = 'https://assets.studio.ibrahimzahir.com';
+const R2 = 'https://studio-assets.ibrahimzahir.com';
 const FORBIDDEN_HOLIDAYS = /\b(christmas|easter|halloween|valentine|st\.?\s*patrick|thanksgiving|hanukkah)\b/i;
 
 describe('Pinterest feed invariants & gating', () => {
@@ -154,8 +154,8 @@ describe('Public Rich Pin landing pages & CSP', () => {
   });
 
   it('adds only valid HTTPS R2 origin to production CSP img-src', () => {
-    const prod = contentSecurityPolicy('abc', false, ['https://assets.studio.ibrahimzahir.com/pins', 'http://insecure.example', 'not-a-url']);
-    expect(prod).toContain("img-src 'self' data: blob: https://assets.studio.ibrahimzahir.com;");
+    const prod = contentSecurityPolicy('abc', false, ['https://studio-assets.ibrahimzahir.com/pins', 'http://insecure.example', 'not-a-url']);
+    expect(prod).toContain("img-src 'self' data: blob: https://studio-assets.ibrahimzahir.com;");
     expect(prod).not.toContain('insecure.example');
   });
 });
