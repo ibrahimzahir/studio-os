@@ -49,16 +49,24 @@ describe('Pinterest feed invariants & gating', () => {
     }
   });
 
-  it('keeps initial draft pins gated (approved: false) so /rss.xml emits zero items before owner approval', () => {
-    expect(pinterestFeedItems.every(p => p.approved === false)).toBe(true);
-    const farFuture = new Date('2030-01-01T00:00:00Z');
+  it('releases the 4 approved Mobile Detailing pins one per day on schedule', () => {
+    expect(pinterestFeedItems.filter(p => p.approved)).toHaveLength(4);
+
+    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-25T17:59:00+05:00'))).toHaveLength(0);
+    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-25T18:01:00+05:00')).map(p => p.id)).toEqual([
+      'mdp-pin-01-job-costing',
+    ]);
+    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-29T00:00:00+05:00'))).toHaveLength(4);
+
     const xml = renderPinterestRssXml(pinterestFeedItems, {
-      now: farFuture,
+      now: new Date('2026-11-25T18:01:00+05:00'),
       siteOrigin: SITE,
       r2BaseUrl: R2,
+      board: 'Detailing',
     });
     expect(xml).toContain('<rss version="2.0"');
-    expect(xml).not.toContain('<item>');
+    expect(xml).toContain('<guid isPermaLink="false">mdp-pin-01-job-costing</guid>');
+    expect(xml).not.toContain('mdp-pin-02-service-menu');
   });
 
   it('emits only approved and due pins newest-first, and filters by ?board= case-insensitively', () => {

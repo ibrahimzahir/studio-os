@@ -33,7 +33,7 @@ export const pinterestFeedItems: readonly PinterestPin[] = [
     productSlug: 'mobile-detailing-planner',
     r2Key: 'pins/mobile-detailing/pin-01-job-costing-calculator.png',
     publishAt: '2026-11-25T18:00:00+05:00',
-    approved: false,
+    approved: true,
   },
   {
     id: 'mdp-pin-02-service-menu',
@@ -46,7 +46,7 @@ export const pinterestFeedItems: readonly PinterestPin[] = [
     productSlug: 'mobile-detailing-planner',
     r2Key: 'pins/mobile-detailing/pin-02-service-menu-template.png',
     publishAt: '2026-11-26T18:00:00+05:00',
-    approved: false,
+    approved: true,
   },
   {
     id: 'mdp-pin-03-vehicle-inspection',
@@ -59,7 +59,7 @@ export const pinterestFeedItems: readonly PinterestPin[] = [
     productSlug: 'mobile-detailing-planner',
     r2Key: 'pins/mobile-detailing/pin-03-vehicle-inspection-form.png',
     publishAt: '2026-11-27T18:00:00+05:00',
-    approved: false,
+    approved: true,
   },
   {
     id: 'mdp-pin-04-complete-toolkit',
@@ -72,7 +72,7 @@ export const pinterestFeedItems: readonly PinterestPin[] = [
     productSlug: 'mobile-detailing-planner',
     r2Key: 'pins/mobile-detailing/pin-04-complete-detailing-toolkit.png',
     publishAt: '2026-11-28T18:00:00+05:00',
-    approved: false,
+    approved: true,
   },
 ];
 
