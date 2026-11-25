@@ -1,9 +1,16 @@
 import type { Metadata } from 'next';
 
 export interface ProductDeliverable {
+  readonly number: string;
   readonly name: string;
   readonly format: string;
   readonly summary: string;
+  readonly bullets: readonly string[];
+}
+
+export interface ProductFaq {
+  readonly question: string;
+  readonly answer: string;
 }
 
 export interface ProductPreviewSheet {
@@ -20,6 +27,9 @@ export interface PublicProduct {
   readonly title: string;
   readonly subtitle: string;
   readonly description: string;
+  readonly priceUsd: number;
+  readonly fileCountLabel: string;
+  readonly checkoutUrl?: string;
   readonly audience: string;
   readonly category: string;
   readonly statusLabel: string;
@@ -28,6 +38,7 @@ export interface PublicProduct {
   readonly previewSheets: readonly ProductPreviewSheet[];
   readonly deliverables: readonly ProductDeliverable[];
   readonly highlights: readonly string[];
+  readonly faqs: readonly ProductFaq[];
 }
 
 export const DEFAULT_PUBLIC_SITE_ORIGIN = 'https://studio.ibrahimzahir.com';
@@ -45,12 +56,14 @@ export const publicProducts: readonly PublicProduct[] = [
   {
     slug: 'mobile-detailing-planner',
     title: 'Mobile Detailing Business Planner – Calculator, Menu & Inspection Kit',
-    subtitle: 'Quote accurately by target margin and run consistent on-site walkarounds without monthly software subscriptions.',
+    subtitle: 'Stop guessing prices or losing profit to markup math. Quote every vehicle by target margin and run professional clipboard walkarounds — zero monthly software fees.',
     description:
       'Deterministic 3-tab Excel and Google Sheets job-costing calculator (no macros), printable tiered service menu, 1-page pre-service vehicle inspection checklist with 5-view outline, and 15-minute quick-start guide in US Letter and A4 formats.',
+    priceUsd: 24.99,
+    fileCountLabel: '7 files · Excel/Sheets + US Letter & A4 PDFs',
     audience: 'Solo operators and small-crew mobile auto detailers',
     category: 'Operations & Pricing Toolkit',
-    statusLabel: 'Pre-launch preview',
+    statusLabel: 'One-Time Purchase · No Subscription',
     ogImageR2Key: 'pins/mobile-detailing/pin-04-complete-detailing-toolkit.png',
     ogImageAlt:
       'Collage preview of the 4-file Mobile Detailing Business Planner showing the printable Service Menu, 1-page Vehicle Inspection Form, and Quick-Start Guide.',
@@ -98,35 +111,73 @@ export const publicProducts: readonly PublicProduct[] = [
     ],
     deliverables: [
       {
+        number: '01',
         name: 'Job Costing & Target-Margin Calculator',
-        format: 'Excel (.xlsx) & Google Sheets — 3 tabs, 57 formulas, zero macros',
-        summary:
-          'Tracks labor hours, diluted chemical cost per ounce, round-trip mileage, and monthly overhead with target-margin pricing formulas to prevent markup underpricing.',
+        format: 'Excel (.xlsx) & Google Sheets · 3 tabs · 57 formulas',
+        summary: 'Know your exact break-even cost and target-margin quote before you load the van.',
+        bullets: [
+          'Tracks labor hours, diluted chemical cost per ounce, mileage & monthly overhead',
+          'Uses true target-margin formulas ($100 cost at 40% margin = $166.67, not $140)',
+          'Zero macros or external links — works 100% offline in Excel, LibreOffice & Sheets',
+        ],
       },
       {
+        number: '02',
         name: 'Tiered Service Menu Template',
-        format: 'Printable PDF — US Letter & A4 (color + grayscale safe)',
-        summary:
-          'Three structured detailing tiers by vehicle size (sedan, mid-size SUV, large SUV/truck) with optional add-ons, upfront exclusions, and blank rate slots for your own calculator-derived prices.',
+        format: 'Printable PDF · US Letter & A4 · 2 pages',
+        summary: 'Present clean, confidence-building packages instead of texting messy price lists.',
+        bullets: [
+          '3 clear tiers by vehicle size: Sedan, Mid-Size SUV, and Large SUV / Truck',
+          'Dedicated Page 2 for optional add-ons, upfront exclusions & booking policies',
+          'Blank rate slots so you drop in your own calculator-derived prices',
+        ],
       },
       {
+        number: '03',
         name: 'Pre-Service Vehicle Inspection Form',
-        format: '1-Page Clipboard PDF — US Letter & A4',
-        summary:
-          'Original 5-view exterior vehicle outline (top, sides, front, rear), defect code legend (scratch, dent, chip, curb rash), interior condition checklist, and customer acknowledgment block.',
+        format: '1-Page Clipboard PDF · US Letter & A4',
+        summary: 'Protect your business and document pre-existing damage in 3 minutes on-site.',
+        bullets: [
+          'Original 5-view exterior diagram (top, left, right, front & rear) + defect legend',
+          'Interior condition check, valuables check & agreed package summary',
+          'Customer pre-service sign-off block with clipboard-safe 0.78 in top margin',
+        ],
       },
       {
+        number: '04',
         name: '15-Minute Quick-Start Guide',
-        format: 'Printable PDF — US Letter & A4',
-        summary:
-          'Step-by-step setup walkthrough covering target margin vs. markup math, chemical dilution inputs, and first-job walkaround workflow.',
+        format: 'Printable PDF · US Letter & A4 · 3 pages',
+        summary: 'Go from download to your first accurately priced detailing quote in 15 minutes.',
+        bullets: [
+          '3-step setup walkthrough for baseline costs, service menu & clipboard sheets',
+          'Plain-English Margin vs. Markup reference table with worked examples',
+          'Grayscale & color print settings for crisp office or home printing',
+        ],
       },
     ],
     highlights: [
       'Deterministic spreadsheet formulas — no macros, no external links, works offline',
       'Both US Letter (8.5 × 11 in) and A4 (210 × 297 mm) print-ready PDFs included',
       'Tested for clean black-and-white clipboard printing as well as color',
-      'Built for independent mobile detailing businesses — no subscription required',
+      'One-time download — zero recurring SaaS subscriptions',
+    ],
+    faqs: [
+      {
+        question: 'Does the calculator work in both Microsoft Excel and Google Sheets?',
+        answer: 'Yes. The workbook uses standard deterministic spreadsheet formulas with zero macros and zero external links, so it opens cleanly in Excel, Google Sheets, and LibreOffice Calc.',
+      },
+      {
+        question: 'Are both US Letter and A4 paper sizes included?',
+        answer: 'Yes. Every PDF (Service Menu, 1-Page Vehicle Inspection Form, and Quick-Start Guide) is included in both US Letter (8.5 × 11 in) and international A4 (210 × 297 mm) formats.',
+      },
+      {
+        question: 'Will the forms print clearly on a black-and-white printer?',
+        answer: 'Yes. Every sheet was designed and verified in grayscale with high-contrast lines and a generous top clipboard margin so you can print stacks cheaply for daily jobs.',
+      },
+      {
+        question: 'Is this a monthly subscription?',
+        answer: 'No. It is a single one-time purchase with instant digital file download and no recurring fees.',
+      },
     ],
   },
 ];
