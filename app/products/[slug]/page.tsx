@@ -2,10 +2,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import {
-  ArrowDown,
   ArrowUpRight,
   Calculator,
   Check,
+  ChevronRight,
   Download,
   FileSpreadsheet,
   FileText,
@@ -58,66 +58,166 @@ export default async function PublicProductPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-30 border-b border-border/80 bg-card/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-3.5">
-          <Link href="/" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
-            <StudioLogoMark className="size-6 text-primary" />
-            <span>Dockly</span>
-          </Link>
-          <div className="flex items-center gap-3">
+      <header className="sticky top-0 z-30 border-b border-border/80 bg-card/90 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
+          <div className="flex items-center gap-6">
+            <Link href="/products" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
+              <StudioLogoMark className="size-6 text-primary" />
+              <span>Dockly</span>
+            </Link>
+            <nav className="hidden items-center gap-4 text-xs font-medium text-muted-foreground sm:flex">
+              <Link href="/products" className="transition-colors hover:text-foreground">
+                All Templates
+              </Link>
+              <a href="#overview" className="transition-colors hover:text-foreground">
+                Overview
+              </a>
+              <a href="#whats-included" className="transition-colors hover:text-foreground">
+                Included Files
+              </a>
+              <a href="#faq" className="transition-colors hover:text-foreground">
+                FAQ
+              </a>
+            </nav>
+          </div>
+          {checkoutUrl ? (
             <a
-              href="#preview-gallery"
-              className="hidden text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline"
+              href={checkoutUrl}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
             >
-              Preview sheets
+              <span>Buy — ${product.priceUsd.toFixed(2)}</span>
+              <ArrowUpRight className="size-3.5" />
             </a>
+          ) : (
             <a
               href="#whats-included"
-              className="hidden text-xs font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
             >
-              What&apos;s included
+              <span>See All Files</span>
             </a>
-            {checkoutUrl ? (
-              <a
-                href={checkoutUrl}
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
-              >
-                <span>Buy — ${product.priceUsd.toFixed(2)}</span>
-                <ArrowUpRight className="size-3.5" />
-              </a>
-            ) : (
-              <a
-                href="#buy-card"
-                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-3.5 py-1.5 text-xs font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
-              >
-                <span>Get Toolkit — ${product.priceUsd.toFixed(2)}</span>
-              </a>
-            )}
-          </div>
+          )}
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-10 sm:py-14">
-        {/* Hero + Purchase Card */}
-        <section className="grid gap-8 lg:grid-cols-[1.35fr_0.85fr] lg:items-start">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/8 px-3 py-1 text-xs font-medium text-primary">
-              <span>{product.category}</span>
-              <span aria-hidden="true">·</span>
-              <span>US Letter &amp; A4</span>
-            </div>
+      <main className="mx-auto max-w-6xl px-6 py-8 sm:py-10">
+        {/* Jotform-inspired Above-the-Fold Split Hero: Left Live Document Preview | Right Title & CTA */}
+        <section className="grid gap-8 lg:grid-cols-[1.45fr_0.95fr] lg:items-start">
+          <div>
+            <ProductPreviewGallery sheets={resolvedSheets} />
+          </div>
 
+          <aside className="space-y-6 lg:sticky lg:top-20">
+            {/* Breadcrumb */}
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-medium text-primary">
+              <Link href="/products" className="hover:underline">
+                Templates
+              </Link>
+              <ChevronRight className="size-3.5 text-muted-foreground" />
+              <span className="text-muted-foreground">{product.category}</span>
+            </nav>
+
+            {/* Title & Subtitle */}
             <div className="space-y-3">
-              <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 {product.title}
               </h1>
-              <p className="text-base leading-relaxed text-muted-foreground">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {product.subtitle}
               </p>
             </div>
 
-            {/* Concrete math callout */}
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 sm:p-5">
+            {/* Price & Primary CTA Box */}
+            <div className="rounded-xl border border-border bg-card p-5 shadow-xs">
+              <div className="flex items-baseline justify-between gap-2">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-3xl font-bold tracking-tight text-foreground">
+                    ${product.priceUsd.toFixed(2)}
+                  </span>
+                  <span className="text-xs text-muted-foreground">USD one-time</span>
+                </div>
+                <span className="rounded-md border border-primary/20 bg-primary/8 px-2.5 py-1 text-xs font-medium text-primary">
+                  No subscription
+                </span>
+              </div>
+              <p className="mt-1.5 text-xs text-muted-foreground">{product.fileCountLabel}</p>
+
+              <div className="mt-4">
+                {checkoutUrl ? (
+                  <a
+                    href={checkoutUrl}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
+                  >
+                    <Download className="size-4" />
+                    <span>Buy &amp; Instant Download — ${product.priceUsd.toFixed(2)}</span>
+                  </a>
+                ) : (
+                  <a
+                    href="#whats-included"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
+                  >
+                    <Download className="size-4" />
+                    <span>Checkout Opening Soon — Inspect Kit</span>
+                  </a>
+                )}
+              </div>
+
+              <p className="mt-2.5 text-center text-[11px] text-muted-foreground">
+                {checkoutUrl
+                  ? 'Instant ZIP download after payment · Clean unwatermarked files · No account needed'
+                  : 'Purchased ZIP includes clean unwatermarked PDFs (US Letter & A4) + Excel/Sheets workbook'}
+              </p>
+            </div>
+
+            {/* Key Specs */}
+            <ul className="space-y-2.5 border-t border-border pt-5">
+              {product.highlights.map(item => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground/90">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </section>
+
+        {/* Sub-navigation Tabs Bar (Jotform-style Overview / Included Files / FAQ) */}
+        <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
+          <div className="flex items-center gap-2">
+            <a
+              href="#overview"
+              className="rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary"
+            >
+              Overview
+            </a>
+            <a
+              href="#whats-included"
+              className="rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              Included Files (4)
+            </a>
+            <a
+              href="#faq"
+              className="rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              FAQ
+            </a>
+          </div>
+          <Link
+            href="/products"
+            className="text-xs font-medium text-primary hover:underline"
+          >
+            Browse all templates →
+          </Link>
+        </div>
+
+        {/* Overview + Math Callout */}
+        <section id="overview" className="mt-8 grid gap-8 scroll-mt-20 lg:grid-cols-[1.4fr_0.9fr]">
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold tracking-tight">About this toolkit</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              {product.description}
+            </p>
+            <div className="rounded-xl border border-primary/20 bg-primary/5 p-5">
               <div className="flex items-start gap-3">
                 <Calculator className="mt-0.5 size-5 shrink-0 text-primary" aria-hidden="true" />
                 <div className="space-y-1 text-sm">
@@ -130,102 +230,41 @@ export default async function PublicProductPage({ params }: PageProps) {
                 </div>
               </div>
             </div>
-
-            <div className="flex flex-wrap items-center gap-3 pt-1">
-              <a
-                href="#preview-gallery"
-                className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-medium text-foreground shadow-xs transition-colors hover:bg-muted"
-              >
-                <span>Inspect all 5 full-size sheets</span>
-                <ArrowDown className="size-4 text-primary" />
-              </a>
-              <span className="text-xs text-muted-foreground">
-                No account required · Clean unwatermarked files on purchase
-              </span>
-            </div>
           </div>
 
-          {/* Purchase Card */}
-          <aside
-            id="buy-card"
-            className="rounded-2xl border border-border bg-card p-6 shadow-sm lg:sticky lg:top-20"
-          >
-            <div className="flex items-baseline justify-between gap-2">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-primary">
-                  {product.statusLabel}
-                </p>
-                <div className="mt-1 flex items-baseline gap-1.5">
-                  <span className="text-3xl font-bold tracking-tight text-foreground">
-                    ${product.priceUsd.toFixed(2)}
-                  </span>
-                  <span className="text-xs text-muted-foreground">USD one-time</span>
-                </div>
+          <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Template Details
+            </h3>
+            <dl className="space-y-2.5 text-sm">
+              <div className="flex justify-between gap-4 border-b border-border/60 pb-2">
+                <dt className="text-muted-foreground">Built for</dt>
+                <dd className="text-right font-medium text-foreground">Mobile auto detailers</dd>
               </div>
-              <span className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground">
-                Instant ZIP
-              </span>
-            </div>
-
-            <p className="mt-2 text-xs text-muted-foreground">{product.fileCountLabel}</p>
-
-            <ul className="mt-5 space-y-2.5 border-y border-border py-5">
-              {product.highlights.map(item => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground/90">
-                  <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="mt-5 space-y-2.5">
-              {checkoutUrl ? (
-                <a
-                  href={checkoutUrl}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
-                >
-                  <Download className="size-4" />
-                  <span>Buy &amp; Instant Download — ${product.priceUsd.toFixed(2)}</span>
-                </a>
-              ) : (
-                <a
-                  href="#preview-gallery"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-xs transition-opacity hover:opacity-95"
-                >
-                  <Download className="size-4" />
-                  <span>Checkout Opening Soon — Preview Full Kit</span>
-                </a>
-              )}
-              <p className="text-center text-xs text-muted-foreground">
-                {checkoutUrl
-                  ? 'Secure checkout · Instant download link after payment · No login required'
-                  : 'Payment gateway is being finalized — browse every full-resolution sheet below'}
-              </p>
-            </div>
-          </aside>
-        </section>
-
-        {/* Full-resolution interactive preview gallery */}
-        <section id="preview-gallery" className="mt-14 scroll-mt-20 space-y-4" aria-labelledby="preview-gallery-heading">
-          <div className="space-y-1">
-            <h2 id="preview-gallery-heading" className="text-2xl font-bold tracking-tight">
-              Look Inside Every Sheet
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Switch pages below or click any sheet to zoom to 100% readable size. Purchased downloads come clean with no preview watermark.
-            </p>
+              <div className="flex justify-between gap-4 border-b border-border/60 pb-2">
+                <dt className="text-muted-foreground">Formats</dt>
+                <dd className="text-right font-medium text-foreground">XLSX + US Letter &amp; A4 PDF</dd>
+              </div>
+              <div className="flex justify-between gap-4 border-b border-border/60 pb-2">
+                <dt className="text-muted-foreground">Compatibility</dt>
+                <dd className="text-right font-medium text-foreground">Excel, Sheets, LibreOffice</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-muted-foreground">Print mode</dt>
+                <dd className="text-right font-medium text-foreground">Color &amp; Grayscale safe</dd>
+              </div>
+            </dl>
           </div>
-          <ProductPreviewGallery sheets={resolvedSheets} />
         </section>
 
-        {/* Upgraded scannable deliverables */}
-        <section id="whats-included" className="mt-16 scroll-mt-20 space-y-6" aria-labelledby="deliverables-heading">
+        {/* Included Files */}
+        <section id="whats-included" className="mt-14 scroll-mt-20 space-y-6" aria-labelledby="deliverables-heading">
           <div className="space-y-1">
             <h2 id="deliverables-heading" className="text-2xl font-bold tracking-tight">
               What&apos;s Included in Your Download
             </h2>
             <p className="text-sm text-muted-foreground">
-              Four tightly coordinated tools designed for real desk quoting and clipboard walkarounds — zero subscriptions or macros.
+              Four coordinated tools built for desk quoting and clipboard walkarounds — zero macros or recurring software fees.
             </p>
           </div>
 
@@ -266,38 +305,8 @@ export default async function PublicProductPage({ params }: PageProps) {
           </div>
         </section>
 
-        {/* 3-Step Workflow */}
-        <section className="mt-16 rounded-2xl border border-border bg-card p-6 sm:p-8">
-          <h2 className="text-xl font-bold tracking-tight">From Download to Your Next Quote in 15 Minutes</h2>
-          <div className="mt-6 grid gap-6 sm:grid-cols-3">
-            {[
-              {
-                step: 'Step 1',
-                title: 'Enter Your Real Costs',
-                body: 'Plug your hourly rate, diluted chemicals, mileage, and monthly overhead into the 3-tab Excel/Sheets calculator.',
-              },
-              {
-                step: 'Step 2',
-                title: 'Lock Your Service Menu',
-                body: 'Drop your target-margin prices into the clean 2-page Service Menu (US Letter or A4) by vehicle size.',
-              },
-              {
-                step: 'Step 3',
-                title: 'Walk Around & Quote',
-                body: 'Clip the 1-page Vehicle Inspection Form to your board, mark pre-existing defects together, and get sign-off.',
-              },
-            ].map(s => (
-              <div key={s.step} className="space-y-1.5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-primary">{s.step}</span>
-                <h3 className="text-base font-semibold text-foreground">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">{s.body}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Buyer FAQ */}
-        <section className="mt-16 space-y-5" aria-labelledby="faq-heading">
+        {/* FAQ */}
+        <section id="faq" className="mt-14 scroll-mt-20 space-y-5" aria-labelledby="faq-heading">
           <h2 id="faq-heading" className="text-2xl font-bold tracking-tight">
             Common Questions
           </h2>
@@ -313,7 +322,7 @@ export default async function PublicProductPage({ params }: PageProps) {
       </main>
 
       <footer className="mt-16 border-t border-border/80 bg-muted/20">
-        <div className="mx-auto flex max-w-5xl flex-col gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span>Dockly · Practical digital operating templates</span>
           <span>No tracking pixels · Privacy-first pages</span>
         </div>

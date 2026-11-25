@@ -1,7 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Maximize2, X, ZoomIn, ZoomOut } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Eye,
+  Maximize2,
+  Minus,
+  Plus,
+  X,
+} from 'lucide-react';
 
 export interface ResolvedPreviewSheet {
   readonly id: string;
@@ -16,19 +24,21 @@ interface ProductPreviewGalleryProps {
   readonly sheets: readonly ResolvedPreviewSheet[];
 }
 
+const ZOOM_LEVELS = [60, 75, 100, 125, 150] as const;
+
 export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [zoomIdx, setZoomIdx] = useState(1); // default 75% (fits full sheet width cleanly)
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [zoomed, setZoomed] = useState(false);
 
   const active = sheets[activeIndex];
+  const zoomPct = ZOOM_LEVELS[zoomIdx] ?? 75;
 
   useEffect(() => {
     if (!lightboxOpen) return;
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         setLightboxOpen(false);
-        setZoomed(false);
       } else if (e.key === 'ArrowRight') {
         setActiveIndex(prev => (prev + 1) % sheets.length);
       } else if (e.key === 'ArrowLeft') {
@@ -43,99 +53,119 @@ export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
 
   const goPrev = () => setActiveIndex(prev => (prev - 1 + sheets.length) % sheets.length);
   const goNext = () => setActiveIndex(prev => (prev + 1) % sheets.length);
+  const zoomIn = () => setZoomIdx(prev => Math.min(prev + 1, ZOOM_LEVELS.length - 1));
+  const zoomOut = () => setZoomIdx(prev => Math.max(prev - 1, 0));
 
   return (
-    <div className="space-y-4">
-      {/* Sheet selector tabs */}
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Document preview pages">
-        {sheets.map((sheet, idx) => {
-          const isSelected = idx === activeIndex;
-          return (
-            <button
-              key={sheet.id}
-              type="button"
-              role="tab"
-              aria-selected={isSelected}
-              onClick={() => setActiveIndex(idx)}
-              className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
-                isSelected
-                  ? 'border-primary bg-primary text-primary-foreground shadow-xs'
-                  : 'border-border bg-card text-muted-foreground hover:border-primary/40 hover:text-foreground'
-              }`}
-            >
-              {sheet.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Main readable sheet viewer */}
-      <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5">
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-foreground">{active.label}</p>
-            <p className="truncate text-xs text-muted-foreground">{active.caption}</p>
-          </div>
-          <div className="flex shrink-0 items-center gap-1.5">
-            <button
-              type="button"
-              onClick={goPrev}
-              aria-label="Previous sheet"
-              className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-foreground hover:bg-muted"
-            >
-              <ChevronLeft className="size-4" />
-            </button>
-            <span className="px-1.5 text-xs tabular-nums text-muted-foreground">
-              {activeIndex + 1} / {sheets.length}
-            </span>
-            <button
-              type="button"
-              onClick={goNext}
-              aria-label="Next sheet"
-              className="inline-flex size-8 items-center justify-center rounded-md border border-border bg-background text-foreground hover:bg-muted"
-            >
-              <ChevronRight className="size-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setZoomed(false);
-                setLightboxOpen(true);
-              }}
-              className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-primary/30 bg-primary/10 px-2.5 py-1.5 text-xs font-medium text-primary hover:bg-primary/15"
-            >
-              <Maximize2 className="size-3.5" />
-              <span>Zoom Full Size</span>
-            </button>
-          </div>
-        </div>
-
+    <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      {/* Interactive Document Canvas (Jotform-inspired) */}
+      <div className="relative bg-[#E9EDF7] dark:bg-slate-900/90">
+        {/* Top-right fullscreen button */}
         <button
           type="button"
-          onClick={() => {
-            setZoomed(false);
-            setLightboxOpen(true);
-          }}
-          className="group relative block w-full cursor-zoom-in bg-slate-100 p-4 text-left sm:p-6 dark:bg-slate-900/70"
-          aria-label={`Open full-size preview of ${active.label}`}
+          onClick={() => setLightboxOpen(true)}
+          aria-label="Open full-screen preview"
+          className="absolute top-3.5 right-3.5 z-10 inline-flex items-center gap-1.5 rounded-lg border border-slate-200/90 bg-white/95 px-2.5 py-1.5 text-xs font-medium text-slate-700 shadow-xs backdrop-blur-xs transition-colors hover:bg-white dark:border-slate-700 dark:bg-slate-800/95 dark:text-slate-100"
         >
-          <div className="mx-auto max-w-3xl overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md">
+          <Maximize2 className="size-3.5" />
+          <span className="hidden sm:inline">Full screen</span>
+        </button>
+
+        {/* Scrollable Sheet Viewport */}
+        <div className="h-[520px] overflow-auto p-5 sm:h-[600px] sm:p-8">
+          <div
+            className="mx-auto overflow-hidden rounded-md border border-slate-200/90 bg-white shadow-lg transition-[width] duration-150"
+            style={{ width: `${zoomPct}%`, minWidth: zoomPct >= 100 ? `${Math.round((zoomPct / 100) * 680)}px` : '280px' }}
+          >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={active.imageUrl}
               alt={`${active.label} — ${active.caption}`}
               width={active.width}
               height={active.height}
-              className="h-auto w-full object-contain"
+              className="block h-auto w-full"
             />
           </div>
-          <span className="pointer-events-none absolute right-6 bottom-6 rounded-md bg-slate-900/85 px-3 py-1.5 text-xs font-medium text-white opacity-90 shadow-sm transition-opacity group-hover:opacity-100">
-            Click anywhere on sheet to zoom full size
-          </span>
-        </button>
+        </div>
 
-        {/* Thumbnail strip */}
-        <div className="grid grid-cols-5 gap-2.5 border-t border-border bg-muted/30 p-3">
+        {/* Floating + / 75% / - Zoom Pill (Bottom-Left) */}
+        <div
+          className="absolute bottom-4 left-4 z-10 flex flex-col items-center overflow-hidden rounded-lg border border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-800"
+          role="group"
+          aria-label="Zoom controls"
+        >
+          <button
+            type="button"
+            onClick={zoomIn}
+            disabled={zoomIdx === ZOOM_LEVELS.length - 1}
+            aria-label="Zoom in"
+            className="flex size-9 items-center justify-center text-slate-700 transition-colors hover:bg-slate-100 disabled:opacity-35 dark:text-slate-100 dark:hover:bg-slate-700"
+          >
+            <Plus className="size-4" />
+          </button>
+          <span className="border-y border-slate-200 px-2 py-1 text-[11px] font-semibold tabular-nums text-slate-600 dark:border-slate-700 dark:text-slate-300">
+            {zoomPct}%
+          </span>
+          <button
+            type="button"
+            onClick={zoomOut}
+            disabled={zoomIdx === 0}
+            aria-label="Zoom out"
+            className="flex size-9 items-center justify-center text-slate-700 transition-colors hover:bg-slate-100 disabled:opacity-35 dark:text-slate-100 dark:hover:bg-slate-700"
+          >
+            <Minus className="size-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Bottom Cobalt Status & Sheet Switcher Bar */}
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-primary px-4 py-2.5 text-primary-foreground">
+        <div className="flex min-w-0 items-center gap-2">
+          <Eye className="size-4 shrink-0 opacity-90" aria-hidden="true" />
+          <label htmlFor="sheet-select" className="text-xs font-medium opacity-90">
+            Previewing:
+          </label>
+          <select
+            id="sheet-select"
+            value={activeIndex}
+            onChange={e => setActiveIndex(Number(e.target.value))}
+            className="max-w-[230px] truncate rounded-md border border-white/25 bg-white/15 px-2.5 py-1 text-xs font-semibold text-white outline-none focus:ring-2 focus:ring-white/40 sm:max-w-xs"
+          >
+            {sheets.map((sheet, idx) => (
+              <option key={sheet.id} value={idx} className="bg-slate-900 text-white">
+                {sheet.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={goPrev}
+            aria-label="Previous sheet"
+            className="inline-flex size-7 items-center justify-center rounded-md bg-white/15 text-white transition-colors hover:bg-white/25"
+          >
+            <ChevronLeft className="size-4" />
+          </button>
+          <span className="px-1 text-xs font-medium tabular-nums opacity-95">
+            {activeIndex + 1} / {sheets.length}
+          </span>
+          <button
+            type="button"
+            onClick={goNext}
+            aria-label="Next sheet"
+            className="inline-flex size-7 items-center justify-center rounded-md bg-white/15 text-white transition-colors hover:bg-white/25"
+          >
+            <ChevronRight className="size-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Sheet Caption + Compact Thumbnail Strip */}
+      <div className="border-t border-border bg-card px-4 py-3">
+        <p className="text-xs text-muted-foreground">{active.caption}</p>
+        <div className="mt-2.5 grid grid-cols-5 gap-2">
           {sheets.map((sheet, idx) => {
             const isSelected = idx === activeIndex;
             return (
@@ -143,12 +173,12 @@ export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
                 key={sheet.id}
                 type="button"
                 onClick={() => setActiveIndex(idx)}
-                className={`overflow-hidden rounded-md border bg-white p-1 transition-all ${
+                className={`overflow-hidden rounded-md border bg-white p-0.5 transition-all ${
                   isSelected
                     ? 'border-primary ring-2 ring-primary/30'
-                    : 'border-border/80 opacity-75 hover:opacity-100'
+                    : 'border-border/80 opacity-70 hover:opacity-100'
                 }`}
-                aria-label={`View ${sheet.label}`}
+                aria-label={`Select ${sheet.label}`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -165,13 +195,13 @@ export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
         </div>
       </div>
 
-      {/* Full-screen click-to-zoom lightbox */}
+      {/* Full-Screen Lightbox */}
       {lightboxOpen && (
         <div
           className="fixed inset-0 z-50 flex flex-col bg-slate-950/92 backdrop-blur-xs"
           role="dialog"
           aria-modal="true"
-          aria-label={`Full-size preview: ${active.label}`}
+          aria-label={`Full-screen preview: ${active.label}`}
         >
           <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-white sm:px-6">
             <div className="min-w-0">
@@ -181,39 +211,44 @@ export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
             <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"
+                onClick={zoomOut}
+                disabled={zoomIdx === 0}
+                aria-label="Zoom out"
+                className="inline-flex size-8 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20 disabled:opacity-35"
+              >
+                <Minus className="size-4" />
+              </button>
+              <span className="w-11 text-center text-xs font-semibold tabular-nums">{zoomPct}%</span>
+              <button
+                type="button"
+                onClick={zoomIn}
+                disabled={zoomIdx === ZOOM_LEVELS.length - 1}
+                aria-label="Zoom in"
+                className="inline-flex size-8 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20 disabled:opacity-35"
+              >
+                <Plus className="size-4" />
+              </button>
+              <button
+                type="button"
                 onClick={goPrev}
                 aria-label="Previous sheet"
-                className="inline-flex size-9 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20"
+                className="ml-2 inline-flex size-8 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20"
               >
                 <ChevronLeft className="size-4" />
               </button>
-              <span className="px-1 text-xs tabular-nums text-slate-300">
-                {activeIndex + 1} / {sheets.length}
-              </span>
               <button
                 type="button"
                 onClick={goNext}
                 aria-label="Next sheet"
-                className="inline-flex size-9 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20"
+                className="inline-flex size-8 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20"
               >
                 <ChevronRight className="size-4" />
               </button>
               <button
                 type="button"
-                onClick={() => setZoomed(z => !z)}
-                className="inline-flex items-center gap-1.5 rounded-md border border-white/15 bg-white/10 px-3 py-2 text-xs font-medium text-white hover:bg-white/20"
-              >
-                {zoomed ? <ZoomOut className="size-4" /> : <ZoomIn className="size-4" />}
-                <span>{zoomed ? 'Fit to screen' : '100% Zoom'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setLightboxOpen(false);
-                  setZoomed(false);
-                }}
-                aria-label="Close preview"
-                className="inline-flex size-9 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20"
+                onClick={() => setLightboxOpen(false)}
+                aria-label="Close full screen"
+                className="ml-2 inline-flex size-8 items-center justify-center rounded-md border border-white/15 bg-white/10 text-white hover:bg-white/20"
               >
                 <X className="size-4" />
               </button>
@@ -223,16 +258,12 @@ export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
           <div
             className="flex-1 overflow-auto p-4 sm:p-8"
             onClick={e => {
-              if (e.target === e.currentTarget) {
-                setLightboxOpen(false);
-                setZoomed(false);
-              }
+              if (e.target === e.currentTarget) setLightboxOpen(false);
             }}
           >
             <div
-              className={`mx-auto rounded-lg bg-white shadow-2xl ${
-                zoomed ? 'w-[1275px] max-w-none' : 'max-w-4xl'
-              }`}
+              className="mx-auto rounded-lg bg-white shadow-2xl"
+              style={{ width: `${Math.max(zoomPct, 85)}%`, maxWidth: zoomPct >= 125 ? 'none' : '960px' }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -240,8 +271,7 @@ export function ProductPreviewGallery({ sheets }: ProductPreviewGalleryProps) {
                 alt={`${active.label} — full resolution preview`}
                 width={active.width}
                 height={active.height}
-                onClick={() => setZoomed(z => !z)}
-                className={`h-auto w-full rounded-lg ${zoomed ? 'cursor-zoom-out' : 'cursor-zoom-in'}`}
+                className="block h-auto w-full rounded-lg"
               />
             </div>
           </div>
