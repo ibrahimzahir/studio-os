@@ -32,7 +32,7 @@ export const pinterestFeedItems: readonly PinterestPin[] = [
       'Preview of the Mobile Detailing Job Costing Calculator and Margin vs. Markup guide showing a $100 job cost at 40% target margin yielding a $166.67 quoted price.',
     productSlug: 'mobile-detailing-planner',
     r2Key: 'pins/mobile-detailing/pin-01-job-costing-calculator.png',
-    publishAt: '2026-11-25T18:00:00+05:00',
+    publishAt: '2026-11-25T16:00:00+05:00',
     approved: true,
   },
   {

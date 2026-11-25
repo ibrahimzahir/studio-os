@@ -52,14 +52,14 @@ describe('Pinterest feed invariants & gating', () => {
   it('releases the 4 approved Mobile Detailing pins one per day on schedule', () => {
     expect(pinterestFeedItems.filter(p => p.approved)).toHaveLength(4);
 
-    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-25T17:59:00+05:00'))).toHaveLength(0);
-    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-25T18:01:00+05:00')).map(p => p.id)).toEqual([
+    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-25T15:59:00+05:00'))).toHaveLength(0);
+    expect(selectDuePins(pinterestFeedItems, new Date('2026-11-25T16:01:00+05:00')).map(p => p.id)).toEqual([
       'mdp-pin-01-job-costing',
     ]);
     expect(selectDuePins(pinterestFeedItems, new Date('2026-11-29T00:00:00+05:00'))).toHaveLength(4);
 
     const xml = renderPinterestRssXml(pinterestFeedItems, {
-      now: new Date('2026-11-25T18:01:00+05:00'),
+      now: new Date('2026-11-25T16:01:00+05:00'),
       siteOrigin: SITE,
       r2BaseUrl: R2,
       board: 'Detailing',
