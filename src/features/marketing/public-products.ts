@@ -6,6 +6,15 @@ export interface ProductDeliverable {
   readonly summary: string;
 }
 
+export interface ProductPreviewSheet {
+  readonly id: string;
+  readonly label: string;
+  readonly caption: string;
+  readonly r2Key: string;
+  readonly width: number;
+  readonly height: number;
+}
+
 export interface PublicProduct {
   readonly slug: string;
   readonly title: string;
@@ -16,6 +25,7 @@ export interface PublicProduct {
   readonly statusLabel: string;
   readonly ogImageR2Key: string;
   readonly ogImageAlt: string;
+  readonly previewSheets: readonly ProductPreviewSheet[];
   readonly deliverables: readonly ProductDeliverable[];
   readonly highlights: readonly string[];
 }
@@ -44,6 +54,48 @@ export const publicProducts: readonly PublicProduct[] = [
     ogImageR2Key: 'pins/mobile-detailing/pin-04-complete-detailing-toolkit.png',
     ogImageAlt:
       'Collage preview of the 4-file Mobile Detailing Business Planner showing the printable Service Menu, 1-page Vehicle Inspection Form, and Quick-Start Guide.',
+    previewSheets: [
+      {
+        id: 'service-menu-1',
+        label: '1. Service Menu (Packages)',
+        caption: 'Tiered detailing packages by vehicle size (sedan, mid-size SUV, large SUV/truck) with blank price slots.',
+        r2Key: 'previews/mobile-detailing/01-service-menu-packages.png',
+        width: 1275,
+        height: 1650,
+      },
+      {
+        id: 'service-menu-2',
+        label: '2. Add-Ons & Exclusions',
+        caption: 'Optional add-on services, upfront scope exclusions, and customer booking policies (Page 2 of Service Menu).',
+        r2Key: 'previews/mobile-detailing/02-service-menu-addons.png',
+        width: 1275,
+        height: 1650,
+      },
+      {
+        id: 'vehicle-inspection',
+        label: '3. Vehicle Inspection Form',
+        caption: '1-page clipboard walkaround sheet with 5-view exterior diagram, defect legend, interior checklist & sign-off.',
+        r2Key: 'previews/mobile-detailing/03-vehicle-inspection-form.png',
+        width: 1700,
+        height: 2200,
+      },
+      {
+        id: 'quick-start-1',
+        label: '4. Quick-Start Setup',
+        caption: '15-minute setup guide covering all 4 deliverables, spreadsheet inputs, and first-job walkaround steps.',
+        r2Key: 'previews/mobile-detailing/04-quick-start-setup.png',
+        width: 1275,
+        height: 1650,
+      },
+      {
+        id: 'margin-math',
+        label: '5. Margin vs. Markup Math',
+        caption: 'Exact target-margin pricing breakdown showing why a $100 job at 40% margin quotes at $166.67 (not $140).',
+        r2Key: 'previews/mobile-detailing/05-margin-vs-markup-math.png',
+        width: 1275,
+        height: 1650,
+      },
+    ],
     deliverables: [
       {
         name: 'Job Costing & Target-Margin Calculator',

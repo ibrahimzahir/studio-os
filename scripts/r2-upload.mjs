@@ -19,7 +19,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const MAX_BYTES = 500 * 1024;
+const MAX_PIN_BYTES = 500 * 1024;
+const MAX_PREVIEW_BYTES = 1500 * 1024;
 const EXPECTED_WIDTH = 1000;
 const EXPECTED_HEIGHT = 1500;
 
@@ -54,18 +55,22 @@ function parseJpegDimensions(buf) {
   return null;
 }
 
-function validatePinAsset(filename, buf) {
+function validatePinAsset(filename, buf, previewMode) {
   const ext = path.extname(filename).toLowerCase();
   const contentType = ext === '.png' ? 'image/png' : ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : null;
   if (!contentType) {
     throw new Error(`${filename}: unsupported extension (use .png or .jpg)`);
   }
-  if (buf.length > MAX_BYTES) {
-    throw new Error(`${filename}: ${buf.length} bytes exceeds 500 KB limit`);
+  const maxBytes = previewMode ? MAX_PREVIEW_BYTES : MAX_PIN_BYTES;
+  if (buf.length > maxBytes) {
+    throw new Error(`${filename}: ${buf.length} bytes exceeds ${Math.round(maxBytes / 1024)} KB limit`);
   }
   const dims = contentType === 'image/png' ? parsePngDimensions(buf) : parseJpegDimensions(buf);
-  if (!dims || dims.width !== EXPECTED_WIDTH || dims.height !== EXPECTED_HEIGHT) {
-    throw new Error(`${filename}: expected ${EXPECTED_WIDTH}x${EXPECTED_HEIGHT}, got ${dims ? `${dims.width}x${dims.height}` : 'unreadable'}`);
+  if (!dims) {
+    throw new Error(`${filename}: unreadable image dimensions`);
+  }
+  if (!previewMode && (dims.width !== EXPECTED_WIDTH || dims.height !== EXPECTED_HEIGHT)) {
+    throw new Error(`${filename}: expected ${EXPECTED_WIDTH}x${EXPECTED_HEIGHT}, got ${dims.width}x${dims.height}`);
   }
   return { contentType, width: dims.width, height: dims.height };
 }
@@ -121,11 +126,12 @@ async function uploadToR2({ accountId, accessKeyId, secretAccessKey, bucket, key
 async function main() {
   const args = process.argv.slice(2);
   const dryRun = args.includes('--dry-run');
+  const previewMode = args.includes('--preview');
   const positional = args.filter(a => !a.startsWith('--'));
   const [localDir, rawPrefix] = positional;
 
   if (!localDir || !rawPrefix) {
-    console.error('Usage: node scripts/r2-upload.mjs <local-dir> <r2-prefix> [--dry-run]');
+    console.error('Usage: node scripts/r2-upload.mjs <local-dir> <r2-prefix> [--dry-run] [--preview]');
     process.exit(1);
   }
 
@@ -139,7 +145,7 @@ async function main() {
   const files = [];
   for (const filename of entries) {
     const buf = await fs.readFile(path.join(localDir, filename));
-    const meta = validatePinAsset(filename, buf);
+    const meta = validatePinAsset(filename, buf, previewMode);
     files.push({ filename, buf, key: `${prefix}/${filename}`, ...meta });
   }
 

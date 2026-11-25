@@ -8,6 +8,10 @@ import {
   getR2PublicBaseUrl,
 } from '@/features/marketing/public-products';
 import { StudioLogoMark } from '@/components/shared/studio-logo';
+import {
+  ProductPreviewGallery,
+  type ResolvedPreviewSheet,
+} from '@/features/marketing/components/product-preview-gallery';
 
 interface PageProps {
   readonly params: Promise<{ slug: string }>;
@@ -30,7 +34,15 @@ export default async function PublicProductPage({ params }: PageProps) {
   const product = getPublicProductBySlug(slug);
   if (!product) notFound();
 
-  const previewImageUrl = `${getR2PublicBaseUrl()}/${product.ogImageR2Key}`;
+  const r2Base = getR2PublicBaseUrl();
+  const resolvedSheets: ResolvedPreviewSheet[] = product.previewSheets.map(sheet => ({
+    id: sheet.id,
+    label: sheet.label,
+    caption: sheet.caption,
+    imageUrl: `${r2Base}/${sheet.r2Key}`,
+    width: sheet.width,
+    height: sheet.height,
+  }));
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -38,7 +50,7 @@ export default async function PublicProductPage({ params }: PageProps) {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link href="/" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight">
             <StudioLogoMark className="size-6 text-primary" />
-            <span>Studio OS</span>
+            <span>Dockly</span>
           </Link>
           <span className="rounded-md border border-border bg-muted/60 px-2.5 py-1 text-xs font-medium text-muted-foreground">
             {product.category}
@@ -46,56 +58,50 @@ export default async function PublicProductPage({ params }: PageProps) {
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl px-6 py-12">
-        <div className="grid gap-10 lg:grid-cols-[1.25fr_0.75fr] lg:items-start">
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
-              <span>{product.statusLabel}</span>
-              <span aria-hidden="true">·</span>
-              <span>US Letter &amp; A4</span>
-            </div>
-
-            <div className="space-y-3">
-              <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
-                {product.title}
-              </h1>
-              <p className="text-base leading-relaxed text-muted-foreground">
-                {product.subtitle}
-              </p>
-            </div>
-
-            <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                Built for
-              </h2>
-              <p className="mt-1.5 text-sm font-medium text-foreground">{product.audience}</p>
-              <ul className="mt-4 space-y-2.5">
-                {product.highlights.map(item => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm text-foreground/90">
-                    <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+      <main className="mx-auto max-w-5xl px-6 py-10 sm:py-12">
+        <div className="space-y-6">
+          <div className="inline-flex items-center gap-2 rounded-md border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary">
+            <span>{product.statusLabel}</span>
+            <span aria-hidden="true">·</span>
+            <span>US Letter &amp; A4</span>
           </div>
 
-          <aside className="overflow-hidden rounded-xl border border-border bg-card shadow-xs">
-            <div className="aspect-[2/3] w-full bg-muted/40">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={previewImageUrl}
-                alt={product.ogImageAlt}
-                width={1000}
-                height={1500}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div className="border-t border-border p-4 text-xs text-muted-foreground">
-              Preview of the printable deliverables included in this toolkit.
-            </div>
-          </aside>
+          <div className="max-w-3xl space-y-3">
+            <h1 className="text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+              {product.title}
+            </h1>
+            <p className="text-base leading-relaxed text-muted-foreground">
+              {product.subtitle}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-border bg-card p-6 shadow-xs">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Built for
+            </h2>
+            <p className="mt-1.5 text-sm font-medium text-foreground">{product.audience}</p>
+            <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+              {product.highlights.map(item => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-foreground/90">
+                  <Check className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
+
+        <section className="mt-12 space-y-4" aria-labelledby="preview-gallery-heading">
+          <div className="space-y-1">
+            <h2 id="preview-gallery-heading" className="text-xl font-semibold tracking-tight">
+              Look Inside Every Sheet
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Switch pages below or click any sheet to zoom to full readable size. Purchased files come clean with no preview watermark.
+            </p>
+          </div>
+          <ProductPreviewGallery sheets={resolvedSheets} />
+        </section>
 
         <section className="mt-14 space-y-6" aria-labelledby="deliverables-heading">
           <div className="space-y-1">
