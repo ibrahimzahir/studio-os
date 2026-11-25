@@ -22,6 +22,7 @@ import {
   ProductPreviewGallery,
   type ResolvedPreviewSheet,
 } from '@/features/marketing/components/product-preview-gallery';
+import { LiveBrandCustomizer } from '@/features/marketing/components/live-brand-customizer';
 
 interface PageProps {
   readonly params: Promise<{ slug: string }>;
@@ -180,12 +181,20 @@ export default async function PublicProductPage({ params }: PageProps) {
           </aside>
         </section>
 
-        {/* Sub-navigation Tabs Bar (Jotform-style Overview / Included Files / FAQ) */}
+        {/* Sub-navigation Tabs Bar (Jotform-style Overview / Customize Live / Included Files / FAQ) */}
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4 border-b border-border pb-3">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {product.slug === 'mobile-detailing-planner' && (
+              <a
+                href="#customize-live"
+                className="rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary"
+              >
+                Customize Live
+              </a>
+            )}
             <a
               href="#overview"
-              className="rounded-full bg-primary/10 px-3.5 py-1.5 text-xs font-semibold text-primary"
+              className="rounded-full px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               Overview
             </a>
@@ -209,6 +218,13 @@ export default async function PublicProductPage({ params }: PageProps) {
             Browse all templates →
           </Link>
         </div>
+
+        {/* Live Brand & Price Customizer */}
+        {product.slug === 'mobile-detailing-planner' && (
+          <section id="customize-live" className="mt-8 scroll-mt-20">
+            <LiveBrandCustomizer />
+          </section>
+        )}
 
         {/* Overview + Math Callout */}
         <section id="overview" className="mt-8 grid gap-8 scroll-mt-20 lg:grid-cols-[1.4fr_0.9fr]">
